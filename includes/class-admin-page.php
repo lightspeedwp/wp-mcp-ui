@@ -75,8 +75,19 @@ class LSX_MCP_UI_Admin_Page {
 		$default_url  = LSX_MCP_UI_Config_Generator::get_default_server_rest_url();
 		$ls_url       = LSX_MCP_UI_Config_Generator::get_lightspeed_server_rest_url();
 		$app_pass_wp  = function_exists( 'wp_is_application_passwords_available' ) ? wp_is_application_passwords_available() : false;
-		$studio_path  = '/Users/YOUR_USER/Studio/YOUR_SITE';
-		$is_ls_domain = ( 'lightspeed-dev-domain' === $op_env );
+		$studio_path   = untrailingslashit( ABSPATH );
+		$current_user  = wp_get_current_user();
+		$wp_user       = $current_user->exists() ? $current_user->user_login : 'admin';
+		$is_ls_domain  = ( 'lightspeed-dev-domain' === $op_env );
+
+		// Plugin integration detection.
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+		$has_tour_op    = class_exists( 'LSX_TO' ) || is_plugin_active( 'tour-operator/tour-operator.php' );
+		$tour_op_ver    = $has_tour_op && defined( 'LSX_TO_VER' ) ? LSX_TO_VER : null;
+		$has_woocommerce = class_exists( 'WooCommerce' );
+		$woo_ver         = $has_woocommerce && defined( 'WC_VERSION' ) ? WC_VERSION : null;
 
 		$active_tab = isset( $_GET['tab'] ) ? sanitize_key( $_GET['tab'] ) : 'status';
 		?>
@@ -119,16 +130,22 @@ class LSX_MCP_UI_Admin_Page {
 			}
 			?>
 
+			<?php
+			// Redirect legacy tab IDs so old bookmarks still work.
+			$tab_aliases = array( 'server' => 'reference', 'troubleshoot' => 'reference', 'local' => 'connect' );
+			if ( isset( $tab_aliases[ $active_tab ] ) ) {
+				$active_tab = $tab_aliases[ $active_tab ];
+			}
+			?>
 			<?php /* ── TABS ── */ ?>
 			<nav class="lsx-mcp-tabs" aria-label="Dashboard sections">
 				<button type="button" class="lsx-mcp-tab<?php echo 'status' === $active_tab ? ' active' : ''; ?>" data-tab="status">Status</button>
 				<button type="button" class="lsx-mcp-tab<?php echo 'settings' === $active_tab ? ' active' : ''; ?>" data-tab="settings">Settings</button>
-				<button type="button" class="lsx-mcp-tab<?php echo 'local' === $active_tab ? ' active' : ''; ?>" data-tab="local">Local Studio</button>
+				<button type="button" class="lsx-mcp-tab<?php echo 'connect' === $active_tab ? ' active' : ''; ?>" data-tab="connect">Local Setup</button>
 				<button type="button" class="lsx-mcp-tab<?php echo 'devsite' === $active_tab ? ' active' : ''; ?>" data-tab="devsite">Dev Site</button>
-				<button type="button" class="lsx-mcp-tab<?php echo 'server' === $active_tab ? ' active' : ''; ?>" data-tab="server">Custom Server</button>
 				<button type="button" class="lsx-mcp-tab<?php echo 'security' === $active_tab ? ' active' : ''; ?>" data-tab="security">Security</button>
-				<button type="button" class="lsx-mcp-tab<?php echo 'troubleshoot' === $active_tab ? ' active' : ''; ?>" data-tab="troubleshoot">Troubleshooting</button>
-				<button type="button" class="lsx-mcp-tab<?php echo 'docs' === $active_tab ? ' active' : ''; ?>" data-tab="docs">Documentation</button>
+				<button type="button" class="lsx-mcp-tab<?php echo 'reference' === $active_tab ? ' active' : ''; ?>" data-tab="reference">Reference</button>
+				<button type="button" class="lsx-mcp-tab<?php echo 'docs' === $active_tab ? ' active' : ''; ?>" data-tab="docs">Docs</button>
 			</nav>
 
 			<?php /* ──────────────────── STATUS ──────────────────── */ ?>
@@ -285,6 +302,49 @@ class LSX_MCP_UI_Admin_Page {
 					<tr><td>Dedicated MCP username</td><td><code><?php echo esc_html( $dedicated ); ?></code></td></tr>
 				</table>
 
+				<h3>Plugin Integrations</h3>
+				<table class="widefat lsx-mcp-status-table">
+					<thead>
+						<tr><th>Plugin</th><th>Status</th><th>Context ability</th></tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>LSX Tour Operator</td>
+							<td>
+								<?php if ( $has_tour_op ) : ?>
+									<span class="lsx-mcp-badge-ok">Active<?php echo $tour_op_ver ? ' v' . esc_html( $tour_op_ver ) : ''; ?></span>
+								<?php else : ?>
+									<span class="lsx-mcp-badge-na">Not active</span>
+								<?php endif; ?>
+							</td>
+							<td>
+								<?php if ( $has_tour_op ) : ?>
+									<code>wpmcpui/get-tour-operator-context</code> — enable in <a href="<?php echo esc_url( admin_url( 'tools.php?page=wp-mcp-ui' ) ); ?>">Abilities</a>
+								<?php else : ?>
+									<span style="color:#787c82;">Install Tour Operator to unlock this ability.</span>
+								<?php endif; ?>
+							</td>
+						</tr>
+						<tr>
+							<td>WooCommerce</td>
+							<td>
+								<?php if ( $has_woocommerce ) : ?>
+									<span class="lsx-mcp-badge-ok">Active<?php echo $woo_ver ? ' v' . esc_html( $woo_ver ) : ''; ?></span>
+								<?php else : ?>
+									<span class="lsx-mcp-badge-na">Not active</span>
+								<?php endif; ?>
+							</td>
+							<td>
+								<?php if ( $has_woocommerce ) : ?>
+									<code>wpmcpui/get-woocommerce-context</code> — enable in <a href="<?php echo esc_url( admin_url( 'tools.php?page=wp-mcp-ui' ) ); ?>">Abilities</a>
+								<?php else : ?>
+									<span style="color:#787c82;">Install WooCommerce to unlock this ability.</span>
+								<?php endif; ?>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
 				<p style="margin-top:1em;">
 					Manage which MCP abilities (read/write per content type) are enabled at
 					<a href="<?php echo esc_url( admin_url( 'tools.php?page=wp-mcp-ui' ) ); ?>">MCP UI &rarr; Abilities</a>.
@@ -377,8 +437,8 @@ class LSX_MCP_UI_Admin_Page {
 				<?php self::code_block( LSX_MCP_UI_Config_Generator::wp_config_constants(), 'wp-config.php' ); ?>
 			</div>
 
-			<?php /* ──────────────────── LOCAL STUDIO ──────────────────── */ ?>
-			<div id="lsx-mcp-tab-local" class="lsx-mcp-panel<?php echo 'local' === $active_tab ? ' active' : ''; ?>">
+			<?php /* ──────────────────── LOCAL SETUP ──────────────────── */ ?>
+			<div id="lsx-mcp-tab-connect" class="lsx-mcp-panel<?php echo 'connect' === $active_tab ? ' active' : ''; ?>">
 				<h2>Local Studio Setup (STDIO)</h2>
 				<p>Local WordPress Studio sites use <strong>STDIO transport</strong> via WP-CLI. No Application Password is required, no HTTP endpoint is exposed, and the agent runs as a local WordPress user directly.</p>
 
@@ -395,35 +455,31 @@ class LSX_MCP_UI_Admin_Page {
 				<h3>VS Code — Default Server</h3>
 				<p>Create or update <code>.vscode/mcp.json</code> in your project root:</p>
 				<?php self::code_block(
-					LSX_MCP_UI_Config_Generator::vscode_stdio_default( $studio_path, 'admin' ),
+					LSX_MCP_UI_Config_Generator::vscode_stdio_default( $studio_path, $wp_user ),
 					'.vscode/mcp.json'
 				); ?>
 
 				<h3>VS Code — LightSpeed Testing Server</h3>
 				<?php self::code_block(
-					LSX_MCP_UI_Config_Generator::vscode_stdio_lightspeed( $studio_path, 'admin' ),
+					LSX_MCP_UI_Config_Generator::vscode_stdio_lightspeed( $studio_path, $wp_user ),
 					'.vscode/mcp.json'
 				); ?>
 
 				<h3>Claude Code — Default Server</h3>
 				<p>Create <code>.mcp.json</code> at the project root (not inside <code>.claude/</code>):</p>
 				<?php self::code_block(
-					LSX_MCP_UI_Config_Generator::claude_stdio_default( $studio_path, 'admin' ),
+					LSX_MCP_UI_Config_Generator::claude_stdio_default( $studio_path, $wp_user ),
 					'.mcp.json'
 				); ?>
 
 				<h3>Claude Code — LightSpeed Testing Server</h3>
 				<?php self::code_block(
-					LSX_MCP_UI_Config_Generator::claude_stdio_lightspeed( $studio_path, 'admin' ),
+					LSX_MCP_UI_Config_Generator::claude_stdio_lightspeed( $studio_path, $wp_user ),
 					'.mcp.json'
 				); ?>
 
 				<div class="lsx-mcp-note">
-					<strong>Replacing placeholders:</strong>
-					<ul>
-						<li>Replace <code>/Users/YOUR_USER/Studio/YOUR_SITE</code> with the actual path to your Studio site.</li>
-						<li>Replace <code>admin</code> with a real WordPress username on that site.</li>
-					</ul>
+					<strong>Config is pre-filled:</strong> Path and username are auto-detected from this WordPress installation and the current logged-in user. Copy and use directly.
 				</div>
 			</div>
 
@@ -511,9 +567,30 @@ class LSX_MCP_UI_Admin_Page {
 				</div>
 			</div>
 
-			<?php /* ──────────────────── CUSTOM SERVER ──────────────────── */ ?>
-			<div id="lsx-mcp-tab-server" class="lsx-mcp-panel<?php echo 'server' === $active_tab ? ' active' : ''; ?>">
-				<h2>LightSpeed Custom Testing Server</h2>
+			<?php /* ──────────────────── SECURITY ──────────────────── */ ?>
+			<div id="lsx-mcp-tab-security" class="lsx-mcp-panel<?php echo 'security' === $active_tab ? ' active' : ''; ?>">
+				<h2>Security Checklist</h2>
+				<ul class="lsx-mcp-checklist">
+					<li class="ok">MCP clients act as authenticated WordPress users — they inherit the permissions of the account they authenticate as.</li>
+					<li class="ok">Use a dedicated MCP user (<code><?php echo esc_html( $dedicated ); ?></code>) with the minimum useful capability.</li>
+					<li class="ok">Start with read-only abilities. Avoid write abilities on shared or publicly accessible servers.</li>
+					<li class="ok">Application Password compatibility is gated by the MCP enabled flag, the enable flag, the operational environment, and the host pattern — never active on production by default.</li>
+					<li class="ok">Wordfence is <strong>not disabled globally</strong>. Only the WordPress Application Password availability filter is restored for allowed environments and users.</li>
+					<li class="ok">Do not store Application Passwords in WordPress options, the database, or this plugin's settings.</li>
+					<li class="ok">Revoke Application Passwords from the user profile when they are no longer needed.</li>
+					<li class="ok">Do not enable MCP on production without a separate review of the abilities and transport.</li>
+					<li class="warn">Never commit Application Passwords to version control (.env files, config files, etc.).</li>
+					<li class="warn">The default server uses <code>execute-ability</code> which can run any enabled ability — prefer the custom testing server for CI/testing agents.</li>
+					<li class="warn">If the dev site is behind Cloudflare Access, ensure MCP client requests carry valid Service Token headers, or create a bypass rule for the MCP endpoint.</li>
+				</ul>
+			</div>
+
+			<?php /* ──────────────────── REFERENCE (Custom Server + Troubleshooting) ──────────────────── */ ?>
+			<div id="lsx-mcp-tab-reference" class="lsx-mcp-panel<?php echo 'reference' === $active_tab ? ' active' : ''; ?>">
+				<h2>Reference</h2>
+				<p>Custom server details and troubleshooting steps.</p>
+
+				<h3>LightSpeed Custom Testing Server</h3>
 				<p>The custom LightSpeed MCP server exposes a curated set of <strong>read-only diagnostic abilities</strong>. It is separate from the default adapter server and only registers when MCP is enabled and the environment is local or development.</p>
 
 				<table class="widefat">
@@ -547,29 +624,8 @@ class LSX_MCP_UI_Admin_Page {
 					<li>User passwords or Application Password values</li>
 					<li>License keys or plugin option values</li>
 				</ul>
-			</div>
 
-			<?php /* ──────────────────── SECURITY ──────────────────── */ ?>
-			<div id="lsx-mcp-tab-security" class="lsx-mcp-panel<?php echo 'security' === $active_tab ? ' active' : ''; ?>">
-				<h2>Security Checklist</h2>
-				<ul class="lsx-mcp-checklist">
-					<li class="ok">MCP clients act as authenticated WordPress users — they inherit the permissions of the account they authenticate as.</li>
-					<li class="ok">Use a dedicated MCP user (<code><?php echo esc_html( $dedicated ); ?></code>) with the minimum useful capability.</li>
-					<li class="ok">Start with read-only abilities. Avoid write abilities on shared or publicly accessible servers.</li>
-					<li class="ok">Application Password compatibility is gated by the MCP enabled flag, the enable flag, the operational environment, and the host pattern — never active on production by default.</li>
-					<li class="ok">Wordfence is <strong>not disabled globally</strong>. Only the WordPress Application Password availability filter is restored for allowed environments and users.</li>
-					<li class="ok">Do not store Application Passwords in WordPress options, the database, or this plugin's settings.</li>
-					<li class="ok">Revoke Application Passwords from the user profile when they are no longer needed.</li>
-					<li class="ok">Do not enable MCP on production without a separate review of the abilities and transport.</li>
-					<li class="warn">Never commit Application Passwords to version control (.env files, config files, etc.).</li>
-					<li class="warn">The default server uses <code>execute-ability</code> which can run any enabled ability — prefer the custom testing server for CI/testing agents.</li>
-					<li class="warn">If the dev site is behind Cloudflare Access, ensure MCP client requests carry valid Service Token headers, or create a bypass rule for the MCP endpoint.</li>
-				</ul>
-			</div>
-
-			<?php /* ──────────────────── TROUBLESHOOTING ──────────────────── */ ?>
-			<div id="lsx-mcp-tab-troubleshoot" class="lsx-mcp-panel<?php echo 'troubleshoot' === $active_tab ? ' active' : ''; ?>">
-				<h2>Troubleshooting</h2>
+				<h3>Troubleshooting</h3>
 
 				<dl class="lsx-mcp-faq">
 					<dt>MCP features are blocked and I can't see why</dt>
@@ -613,10 +669,10 @@ class LSX_MCP_UI_Admin_Page {
 				</dl>
 			</div>
 
-		<?php /* ──────────────────── DOCUMENTATION ──────────────────── */ ?>
-		<div id="lsx-mcp-tab-docs" class="lsx-mcp-panel<?php echo 'docs' === $active_tab ? ' active' : ''; ?>">
-			<h2>Documentation</h2>
-			<p>Complete reference for setting up and using LightSpeed MCP with Claude Code, VS Code, and Claude Desktop.</p>
+			<?php /* ──────────────────── DOCS ──────────────────── */ ?>
+			<div id="lsx-mcp-tab-docs" class="lsx-mcp-panel<?php echo 'docs' === $active_tab ? ' active' : ''; ?>">
+				<h2>Documentation</h2>
+				<p>Complete reference for setting up and using LightSpeed MCP with Claude Code, VS Code, and Claude Desktop.</p>
 
 			<nav class="lsx-mcp-doc-toc">
 				<strong>Jump to:</strong>
@@ -684,21 +740,21 @@ class LSX_MCP_UI_Admin_Page {
 					'wordpress-local-default' => array(
 						'command' => 'wp',
 						'args'    => array(
-							'--path=/Users/YOUR_USER/Studio/YOUR_SITE',
+							'--path=' . $studio_path,
 							'mcp-adapter',
 							'serve',
 							'--server=mcp-adapter-default-server',
-							'--user=admin',
+							'--user=' . $wp_user,
 						),
 					),
 					'wordpress-local-lightspeed' => array(
 						'command' => 'wp',
 						'args'    => array(
-							'--path=/Users/YOUR_USER/Studio/YOUR_SITE',
+							'--path=' . $studio_path,
 							'mcp-adapter',
 							'serve',
 							'--server=lightspeed-testing-mcp-server',
-							'--user=admin',
+							'--user=' . $wp_user,
 						),
 					),
 				),
@@ -759,21 +815,21 @@ class LSX_MCP_UI_Admin_Page {
 					'wordpress-local-default' => array(
 						'command' => 'wp',
 						'args'    => array(
-							'--path=/Users/YOUR_USER/Studio/YOUR_SITE',
+							'--path=' . $studio_path,
 							'mcp-adapter',
 							'serve',
 							'--server=mcp-adapter-default-server',
-							'--user=admin',
+							'--user=' . $wp_user,
 						),
 					),
 					'wordpress-local-lightspeed' => array(
 						'command' => 'wp',
 						'args'    => array(
-							'--path=/Users/YOUR_USER/Studio/YOUR_SITE',
+							'--path=' . $studio_path,
 							'mcp-adapter',
 							'serve',
 							'--server=lightspeed-testing-mcp-server',
-							'--user=admin',
+							'--user=' . $wp_user,
 						),
 					),
 				),
@@ -985,13 +1041,18 @@ class LSX_MCP_UI_Admin_Page {
 		document.addEventListener( 'DOMContentLoaded', function () {
 			var initialTab = <?php echo json_encode( $active_tab ); ?>;
 
-			function showTab( tabId ) {
+			function showTab( tabId, pushState ) {
 				document.querySelectorAll( '.lsx-mcp-tab' ).forEach( function ( b ) { b.classList.remove( 'active' ); } );
 				document.querySelectorAll( '.lsx-mcp-panel' ).forEach( function ( p ) { p.classList.remove( 'active' ); } );
 				var btn   = document.querySelector( '[data-tab="' + tabId + '"]' );
 				var panel = document.getElementById( 'lsx-mcp-tab-' + tabId );
 				if ( btn )   btn.classList.add( 'active' );
 				if ( panel ) panel.classList.add( 'active' );
+				if ( pushState !== false && history.replaceState ) {
+					var url = new URL( window.location.href );
+					url.searchParams.set( 'tab', tabId );
+					history.replaceState( null, '', url.toString() );
+				}
 			}
 
 			showTab( initialTab );

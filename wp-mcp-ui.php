@@ -81,6 +81,8 @@ function wpmcpui_ability_registry() {
 		'wpmcpui/delete-pattern' => array( 'label' => 'Delete Pattern',  'description' => 'Delete a pattern PHP file from the active theme\'s patterns/ directory.',                            'group' => 'Patterns', 'access' => 'write', 'default' => false ),
 		// TOUR OPERATOR
 		'wpmcpui/get-tour-operator-context' => array( 'label' => 'Tour Operator Context', 'description' => 'Returns full developer context for Tour Operator sites: CPT slugs, all meta keys, taxonomy slugs, modal system details, CSS classes, and Wetu importer field mappings.', 'group' => 'Tour Operator', 'access' => 'read', 'default' => false ),
+		// WOOCOMMERCE
+		'wpmcpui/get-woocommerce-context' => array( 'label' => 'WooCommerce Context', 'description' => 'Returns developer context for WooCommerce sites: CPTs, taxonomies, order statuses, pages, payment gateways, currency, and key meta keys.', 'group' => 'WooCommerce', 'access' => 'read', 'default' => false ),
 	);
 }
 
@@ -156,6 +158,7 @@ function wpmcpui_settings_page() {
 		'Site'         => '🌐',
 		'Patterns'     => '🧩',
 		'Tour Operator' => '🌍',
+		'WooCommerce'   => '🛒',
 	);
 
 	$total   = count( $settings );
@@ -166,40 +169,65 @@ function wpmcpui_settings_page() {
 			$writes++;
 		}
 	}
+
+	$op_env       = class_exists( 'LSX_MCP_UI_Environment' ) ? LSX_MCP_UI_Environment::get_operational_environment() : 'unknown';
+	$write_locked = in_array( $op_env, array( 'lightspeed-dev-domain', 'staging', 'blocked' ), true );
 	?>
 	<style>
-		.wpmcpui-wrap { max-width: 860px; margin: 30px 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-		.wpmcpui-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+		.wpmcpui-wrap { margin: 20px 0 0; padding-right: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+		.wpmcpui-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
 		.wpmcpui-header h1 { margin: 0; font-size: 22px; font-weight: 700; color: #1d2327; }
 		.wpmcpui-badge { background: #2271b1; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
-		.wpmcpui-desc { color: #646970; margin-bottom: 24px; font-size: 13.5px; line-height: 1.65; }
-		.wpmcpui-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+		.wpmcpui-desc { color: #646970; margin-bottom: 20px; font-size: 13.5px; line-height: 1.65; }
+		.wpmcpui-stats { display: grid; grid-template-columns: repeat(3, minmax(0,280px)); gap: 12px; margin-bottom: 24px; }
 		.wpmcpui-stat { background: #fff; border: 1px solid #dcdcde; border-radius: 8px; padding: 14px 20px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
 		.wpmcpui-stat-n { font-size: 30px; font-weight: 700; color: #1d2327; }
 		.wpmcpui-stat-l { font-size: 11px; color: #787c82; margin-top: 2px; text-transform: uppercase; letter-spacing: .5px; }
 		.wpmcpui-stat--on .wpmcpui-stat-n { color: #00a32a; }
 		.wpmcpui-stat--wr .wpmcpui-stat-n { color: #d63638; }
-		.wpmcpui-group { background: #fff; border: 1px solid #dcdcde; border-radius: 8px; margin-bottom: 16px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+		.wpmcpui-ability-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; }
+		.wpmcpui-group { background: #fff; border: 1px solid #dcdcde; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
 		.wpmcpui-gh { background: #f6f7f7; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #dcdcde; }
 		.wpmcpui-gt { font-weight: 700; font-size: 13.5px; color: #1d2327; margin: 0; display: flex; align-items: center; gap: 8px; }
 		.wpmcpui-toggle-all { font-size: 12px; color: #2271b1; cursor: pointer; text-decoration: underline; background: none; border: none; padding: 0; font-weight: 600; }
 		.wpmcpui-row { display: grid; grid-template-columns: 1fr 50px; align-items: center; padding: 13px 20px; border-bottom: 1px solid #f0f0f1; gap: 12px; transition: background .12s; }
 		.wpmcpui-row:last-child { border-bottom: none; }
 		.wpmcpui-row:hover { background: #fafafa; }
-		.wpmcpui-al { font-weight: 600; font-size: 13px; color: #1d2327; display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
+		.wpmcpui-row.wpmcpui-row--locked { opacity: .65; }
+		.wpmcpui-row.wpmcpui-row--locked .wpmcpui-sw { cursor: not-allowed; }
+		.wpmcpui-row.wpmcpui-row--locked .wpmcpui-sl { cursor: not-allowed; }
+		.wpmcpui-al { font-weight: 600; font-size: 13px; color: #1d2327; display: flex; align-items: center; gap: 7px; margin-bottom: 3px; flex-wrap: wrap; }
 		.wpmcpui-ad { font-size: 12px; color: #787c82; line-height: 1.5; }
-		.wpmcpui-ac { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; letter-spacing: .4px; }
+		.wpmcpui-akey { font-size: 11px; color: #a7aaad; font-family: Consolas, Monaco, monospace; margin-top: 3px; }
+		.wpmcpui-ac { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; letter-spacing: .4px; white-space: nowrap; }
 		.wpmcpui-ac--read  { background: #e0f0fa; color: #2271b1; }
 		.wpmcpui-ac--write { background: #fde8e8; color: #d63638; }
+		.wpmcpui-ac--locked { background: #f0f0f1; color: #787c82; }
 		.wpmcpui-sw { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
 		.wpmcpui-sw input { opacity: 0; width: 0; height: 0; }
 		.wpmcpui-sl { position: absolute; cursor: pointer; inset: 0; background: #c3c4c7; border-radius: 34px; transition: .25s; }
 		.wpmcpui-sl:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .25s; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
 		input:checked + .wpmcpui-sl { background: #00a32a; }
 		input:checked + .wpmcpui-sl:before { transform: translateX(20px); }
+		input:disabled + .wpmcpui-sl { background: #c3c4c7 !important; cursor: not-allowed; }
 		.wpmcpui-savebar { display: flex; align-items: center; gap: 16px; margin-top: 24px; padding: 18px 20px; background: #fff; border: 1px solid #dcdcde; border-radius: 8px; }
 		.wpmcpui-savebar .button-primary { font-size: 14px; padding: 7px 20px; height: auto; }
 		.wpmcpui-savenote { font-size: 12px; color: #787c82; }
+		/* Write-lock banner */
+		.wpmcpui-write-lock-banner { display: flex; align-items: flex-start; gap: 12px; background: #fff8e5; border: 1px solid #f0c040; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; line-height: 1.6; color: #3c434a; }
+		.wpmcpui-write-lock-banner strong { color: #996a00; }
+		/* Modal */
+		.wpmcpui-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 100000; display: flex; align-items: center; justify-content: center; }
+		.wpmcpui-modal-overlay[hidden] { display: none; }
+		.wpmcpui-modal-box { background: #fff; border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,.22); padding: 28px 32px; max-width: 480px; width: 90%; }
+		.wpmcpui-modal-box h2 { margin: 0 0 12px; font-size: 17px; font-weight: 700; color: #1d2327; }
+		.wpmcpui-modal-box p { margin: 0 0 12px; font-size: 13.5px; color: #3c434a; line-height: 1.65; }
+		.wpmcpui-modal-ability { background: #f6f7f7; border: 1px solid #dcdcde; border-radius: 6px; padding: 10px 14px; margin: 16px 0; font-size: 13px; }
+		.wpmcpui-modal-ability code { background: none; font-size: 12px; color: #646970; display: block; margin-top: 2px; }
+		.wpmcpui-modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+		.wpmcpui-modal-actions .button { font-size: 13.5px; padding: 6px 16px; height: auto; }
+		.wpmcpui-modal-danger { background: #d63638 !important; border-color: #d63638 !important; color: #fff !important; }
+		.wpmcpui-modal-danger:hover { background: #b32d2e !important; border-color: #b32d2e !important; }
 	</style>
 
 	<div class="wpmcpui-wrap">
@@ -227,9 +255,20 @@ function wpmcpui_settings_page() {
 			</div>
 		</div>
 
+		<?php if ( $write_locked ) : ?>
+		<div class="wpmcpui-write-lock-banner">
+			<span style="font-size:20px;line-height:1;">🔒</span>
+			<div>
+				<strong>Write abilities are locked on this environment (<code style="color:inherit;"><?php echo esc_html( $op_env ); ?></code>).</strong><br>
+				Write abilities can only be enabled on <strong>local</strong> development sites (localhost, .local, .test). This prevents accidental content modification on shared dev or staging servers. To enable write abilities, use a local Studio site via STDIO transport.
+			</div>
+		</div>
+		<?php endif; ?>
+
 		<form method="post" action="options.php">
 			<?php settings_fields( 'wpmcpui_settings_group' ); ?>
 
+			<div class="wpmcpui-ability-grid">
 			<?php foreach ( $groups as $group_name => $abilities ) : ?>
 			<div class="wpmcpui-group">
 				<div class="wpmcpui-gh">
@@ -239,14 +278,22 @@ function wpmcpui_settings_page() {
 					</h3>
 					<button type="button" class="wpmcpui-toggle-all" data-group="<?php echo esc_attr( $group_name ); ?>">Toggle All</button>
 				</div>
-				<?php foreach ( $abilities as $key => $cfg ) : ?>
-				<div class="wpmcpui-row">
+				<?php foreach ( $abilities as $key => $cfg ) :
+					$is_write  = 'write' === $cfg['access'];
+					$is_locked = $is_write && $write_locked;
+				?>
+				<div class="wpmcpui-row<?php echo $is_locked ? ' wpmcpui-row--locked' : ''; ?>">
 					<div>
 						<div class="wpmcpui-al">
 							<?php echo esc_html( $cfg['label'] ); ?>
-							<span class="wpmcpui-ac wpmcpui-ac--<?php echo esc_attr( $cfg['access'] ); ?>"><?php echo esc_html( $cfg['access'] ); ?></span>
+							<?php if ( $is_locked ) : ?>
+								<span class="wpmcpui-ac wpmcpui-ac--locked">locked</span>
+							<?php else : ?>
+								<span class="wpmcpui-ac wpmcpui-ac--<?php echo esc_attr( $cfg['access'] ); ?>"><?php echo esc_html( $cfg['access'] ); ?></span>
+							<?php endif; ?>
 						</div>
 						<div class="wpmcpui-ad"><?php echo esc_html( $cfg['description'] ); ?></div>
+						<div class="wpmcpui-akey"><?php echo esc_html( $key ); ?></div>
 					</div>
 					<label class="wpmcpui-sw">
 						<input
@@ -255,7 +302,10 @@ function wpmcpui_settings_page() {
 							value="1"
 							data-group="<?php echo esc_attr( $group_name ); ?>"
 							data-access="<?php echo esc_attr( $cfg['access'] ); ?>"
+							data-label="<?php echo esc_attr( $cfg['label'] ); ?>"
+							data-key="<?php echo esc_attr( $key ); ?>"
 							<?php checked( ! empty( $settings[ $key ] ) ); ?>
+							<?php disabled( $is_locked ); ?>
 						>
 						<span class="wpmcpui-sl"></span>
 					</label>
@@ -263,6 +313,7 @@ function wpmcpui_settings_page() {
 				<?php endforeach; ?>
 			</div>
 			<?php endforeach; ?>
+			</div><!-- /.wpmcpui-ability-grid -->
 
 			<div class="wpmcpui-savebar">
 				<?php submit_button( 'Save Settings', 'primary', 'submit', false ); ?>
@@ -271,19 +322,62 @@ function wpmcpui_settings_page() {
 		</form>
 	</div>
 
+	<!-- Write-ability confirmation modal -->
+	<div id="wpmcpui-modal" class="wpmcpui-modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="wpmcpui-modal-title">
+		<div class="wpmcpui-modal-box">
+			<h2 id="wpmcpui-modal-title">Enable Write Access?</h2>
+			<p>Write abilities allow Claude to <strong>create, modify, or delete live WordPress content</strong>. Changes made via write abilities are applied immediately and cannot be automatically undone.</p>
+			<p>Only enable write abilities on local development sites. Never use them on shared servers, staging environments, or anywhere real content could be affected.</p>
+			<div class="wpmcpui-modal-ability">
+				<strong id="wpmcpui-modal-label"></strong>
+				<code id="wpmcpui-modal-key"></code>
+			</div>
+			<div class="wpmcpui-modal-actions">
+				<button type="button" class="button button-large" id="wpmcpui-modal-cancel">Cancel</button>
+				<button type="button" class="button button-large wpmcpui-modal-danger" id="wpmcpui-modal-confirm">Enable Write Access</button>
+			</div>
+		</div>
+	</div>
+
 	<script>
 	document.addEventListener('DOMContentLoaded', function () {
-		document.querySelectorAll('input[data-access="write"]').forEach(function (cb) {
+		var modal      = document.getElementById('wpmcpui-modal');
+		var modalLabel = document.getElementById('wpmcpui-modal-label');
+		var modalKey   = document.getElementById('wpmcpui-modal-key');
+		var confirmBtn = document.getElementById('wpmcpui-modal-confirm');
+		var cancelBtn  = document.getElementById('wpmcpui-modal-cancel');
+		var pendingCb  = null;
+
+		function openModal( cb ) {
+			pendingCb = cb;
+			modalLabel.textContent = cb.dataset.label || 'Unknown ability';
+			modalKey.textContent   = cb.dataset.key   || '';
+			modal.removeAttribute('hidden');
+			cancelBtn.focus();
+		}
+		function closeModal( confirm ) {
+			modal.setAttribute('hidden', '');
+			if ( pendingCb ) {
+				if ( ! confirm ) pendingCb.checked = false;
+				pendingCb = null;
+			}
+		}
+
+		confirmBtn.addEventListener('click', function () { closeModal( true ); });
+		cancelBtn.addEventListener('click',  function () { closeModal( false ); });
+		modal.addEventListener('click', function (e) { if ( e.target === modal ) closeModal( false ); });
+		document.addEventListener('keydown', function (e) { if ( e.key === 'Escape' && ! modal.hasAttribute('hidden') ) closeModal( false ); });
+
+		document.querySelectorAll('input[data-access="write"]:not(:disabled)').forEach(function (cb) {
 			cb.addEventListener('change', function () {
-				if (this.checked && !confirm('This ability can MODIFY live site content.\n\nAre you sure you want to enable it?')) {
-					this.checked = false;
-				}
+				if ( this.checked ) openModal( this );
 			});
 		});
+
 		document.querySelectorAll('.wpmcpui-toggle-all').forEach(function (btn) {
 			btn.addEventListener('click', function () {
 				var group = this.dataset.group;
-				var boxes = document.querySelectorAll('input[data-group="' + group + '"]');
+				var boxes = document.querySelectorAll('input[data-group="' + group + '"]:not(:disabled)');
 				var allOn = Array.from(boxes).every(function (b) { return b.checked; });
 				boxes.forEach(function (b) { b.checked = !allOn; });
 			});
@@ -943,7 +1037,7 @@ function wpmcpui_register_all_abilities() {
 				'properties' => array(
 					'filename'       => array( 'type' => 'string',  'description' => 'PHP filename, e.g. hero-banner.php. No path separators.' ),
 					'title'          => array( 'type' => 'string',  'description' => 'Human-readable pattern title.' ),
-					'slug'           => array( 'type' => 'string',  'description' => 'Pattern slug, e.g. theme-slug/hero-banner.' ),
+					'slug'           => array( 'type' => 'string',  'description' => 'Pattern slug. The prefix MUST be the active theme stylesheet slug, e.g. ati-theme-2026/hero-banner. If unsure of the theme slug, call wpmcpui/get-site-info first.' ),
 					'description'    => array( 'type' => 'string',  'description' => 'Optional pattern description.' ),
 					'categories'     => array( 'type' => 'string',  'description' => 'Comma-separated category slugs, e.g. featured, banner.' ),
 					'block_types'    => array( 'type' => 'string',  'description' => 'Comma-separated block types this pattern inserts, e.g. core/cover.' ),
@@ -1000,6 +1094,17 @@ function wpmcpui_register_all_abilities() {
 			'input_schema' => array( 'type' => 'object', 'properties' => array() ),
 			'permission_callback' => function () { return current_user_can( 'edit_posts' ); },
 			'execute_callback'   => 'wpmcpui_execute_get_tour_operator_context',
+		) ) );
+	}
+
+	// ── WOOCOMMERCE CONTEXT ────────────────────────────────────────────────────
+	if ( wpmcpui_is_enabled( 'wpmcpui/get-woocommerce-context' ) ) {
+		wp_register_ability( 'wpmcpui/get-woocommerce-context', array_merge( $base, array(
+			'label'       => 'Get WooCommerce Context',
+			'description' => 'Returns developer context for WooCommerce sites: CPTs, taxonomies, order statuses, pages, payment gateways, currency, and key meta keys.',
+			'input_schema' => array( 'type' => 'object', 'properties' => array() ),
+			'permission_callback' => function () { return current_user_can( 'edit_posts' ); },
+			'execute_callback'   => 'wpmcpui_execute_get_woocommerce_context',
 		) ) );
 	}
 }
@@ -1365,7 +1470,16 @@ function wpmcpui_execute_create_pattern( $input ) {
 	}
 	// Build the PHP header comment.
 	$title          = sanitize_text_field( $input['title'] );
-	$slug           = sanitize_text_field( $input['slug'] );
+	$raw_slug       = sanitize_text_field( $input['slug'] );
+	$theme_slug     = get_stylesheet();
+	// Ensure slug always uses the active theme as prefix.
+	if ( strpos( $raw_slug, '/' ) === false ) {
+		$slug = $theme_slug . '/' . $raw_slug;
+	} elseif ( strpos( $raw_slug, $theme_slug . '/' ) !== 0 ) {
+		$slug = $theme_slug . '/' . substr( $raw_slug, strpos( $raw_slug, '/' ) + 1 );
+	} else {
+		$slug = $raw_slug;
+	}
 	$description    = isset( $input['description'] )    ? sanitize_text_field( $input['description'] )    : '';
 	$categories     = isset( $input['categories'] )     ? sanitize_text_field( $input['categories'] )     : '';
 	$block_types    = isset( $input['block_types'] )    ? sanitize_text_field( $input['block_types'] )    : '';
@@ -1377,7 +1491,7 @@ function wpmcpui_execute_create_pattern( $input ) {
 	if ( $block_types )    $header .= " * Block Types: {$block_types}\n";
 	$header .= " * Viewport Width: {$viewport_width}\n";
 	$header .= " * Inserter: {$inserter}\n";
-	$header .= " */\n";
+	$header .= " */\n?>\n";
 	$content  = $header . "\n" . $input['content'];
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 	$written = file_put_contents( $file_path, $content );
@@ -1728,6 +1842,173 @@ function wpmcpui_execute_get_tour_operator_context( $input ) {
 			'modal_template_area'  => 'Modal template parts must be registered under the "modals" template part area in block themes.',
 			'acf_compatibility'    => 'The get-cpt-items ability includes ACF fields automatically when ACF is active. Tour Operator meta is stored via CMB2, so it appears under the standard meta key names listed above rather than ACF field keys.',
 			'pattern_file_header'  => 'Theme pattern PHP files must start with a header comment block. Use create-pattern to generate the header automatically, or supply the full file content to update-pattern.',
+		),
+	);
+}
+
+function wpmcpui_execute_get_woocommerce_context( $input ) {
+	if ( ! class_exists( 'WooCommerce' ) ) {
+		return array( 'success' => false, 'error' => 'WooCommerce is not active on this site.' );
+	}
+
+	$wc = WC();
+
+	$pages = array();
+	foreach ( array( 'shop', 'cart', 'checkout', 'myaccount', 'terms' ) as $page_key ) {
+		$page_id         = wc_get_page_id( $page_key );
+		$pages[ $page_key ] = array(
+			'id'    => $page_id,
+			'title' => $page_id > 0 ? get_the_title( $page_id ) : null,
+			'url'   => $page_id > 0 ? get_permalink( $page_id ) : null,
+		);
+	}
+
+	$gateways = array();
+	if ( $wc->payment_gateways ) {
+		foreach ( $wc->payment_gateways->payment_gateways() as $gw ) {
+			$gateways[] = array(
+				'id'      => $gw->id,
+				'title'   => $gw->get_title(),
+				'enabled' => 'yes' === $gw->enabled,
+			);
+		}
+	}
+
+	$shipping_zones = array();
+	foreach ( WC_Shipping_Zones::get_zones() as $zone_data ) {
+		$shipping_zones[] = array( 'id' => $zone_data['id'], 'name' => $zone_data['zone_name'] );
+	}
+
+	$product_types = array();
+	$type_terms    = get_terms( array( 'taxonomy' => 'product_type', 'hide_empty' => false ) );
+	if ( ! is_wp_error( $type_terms ) ) {
+		foreach ( $type_terms as $term ) {
+			$product_types[] = $term->slug;
+		}
+	}
+
+	$order_statuses = array();
+	foreach ( wc_get_order_statuses() as $status => $label ) {
+		$order_statuses[ $status ] = $label;
+	}
+
+	return array(
+		'plugin' => array(
+			'name'    => 'WooCommerce',
+			'version' => defined( 'WC_VERSION' ) ? WC_VERSION : ( isset( $wc->version ) ? $wc->version : 'unknown' ),
+			'active'  => true,
+		),
+		'currency' => array(
+			'code'         => get_woocommerce_currency(),
+			'symbol'       => html_entity_decode( get_woocommerce_currency_symbol() ),
+			'position'     => get_option( 'woocommerce_currency_pos' ),
+			'thousand_sep' => get_option( 'woocommerce_price_thousand_sep' ),
+			'decimal_sep'  => get_option( 'woocommerce_price_decimal_sep' ),
+			'num_decimals' => get_option( 'woocommerce_price_num_decimals' ),
+		),
+		'post_types' => array(
+			'product' => array(
+				'label'       => 'Products',
+				'singular'    => 'Product',
+				'rest_base'   => 'products',
+				'subtypes'    => $product_types,
+				'description' => 'Main WooCommerce product CPT. Product type is stored as a product_type taxonomy term (simple, variable, grouped, external).',
+			),
+			'product_variation' => array(
+				'label'       => 'Product Variations',
+				'singular'    => 'Variation',
+				'rest_base'   => 'products/{id}/variations',
+				'description' => 'Child CPT of variable products. Each variation stores its own SKU, price, and attribute combination.',
+			),
+			'shop_order' => array(
+				'label'       => 'Orders',
+				'singular'    => 'Order',
+				'rest_base'   => 'orders',
+				'description' => 'WooCommerce order. May be stored in wp_posts or the HPOS wc_orders table — detect with OrderUtil::custom_orders_table_usage_is_enabled().',
+			),
+		),
+		'taxonomies' => array(
+			'product_cat' => array(
+				'label'        => 'Product Categories',
+				'hierarchical' => true,
+				'description'  => 'Supports parent/child hierarchy and thumbnail images.',
+			),
+			'product_tag' => array(
+				'label'        => 'Product Tags',
+				'hierarchical' => false,
+				'description'  => 'Flat product tag taxonomy.',
+			),
+			'product_type' => array(
+				'label'        => 'Product Types',
+				'hierarchical' => false,
+				'description'  => 'Controls product behaviour: simple, variable, grouped, external/affiliate. Extend with woocommerce_product_class filter.',
+			),
+			'product_visibility' => array(
+				'label'        => 'Product Visibility',
+				'hierarchical' => false,
+				'description'  => 'Controls display: visible, exclude-from-catalog, exclude-from-search, featured.',
+			),
+			'product_shipping_class' => array(
+				'label'        => 'Shipping Classes',
+				'hierarchical' => false,
+				'description'  => 'Groups products for shipping rate calculations.',
+			),
+		),
+		'order_statuses'   => $order_statuses,
+		'pages'            => $pages,
+		'payment_gateways' => $gateways,
+		'shipping_zones'   => $shipping_zones,
+		'meta_keys' => array(
+			'product' => array(
+				'_price'                  => 'Current effective price (sale price when active, else regular price).',
+				'_regular_price'          => 'Non-sale price.',
+				'_sale_price'             => 'Sale price (empty when not on sale).',
+				'_sku'                    => 'Stock Keeping Unit identifier.',
+				'_stock'                  => 'Current stock quantity (integer).',
+				'_stock_status'           => 'instock | outofstock | onbackorder.',
+				'_manage_stock'           => 'yes | no — per-product stock management.',
+				'_backorders'             => 'no | notify | yes.',
+				'_weight'                 => 'Weight in store unit.',
+				'_length'                 => 'Length in store unit.',
+				'_width'                  => 'Width in store unit.',
+				'_height'                 => 'Height in store unit.',
+				'_virtual'                => 'yes | no — virtual products skip shipping.',
+				'_downloadable'           => 'yes | no — adds download links post-purchase.',
+				'_featured'               => 'yes | no.',
+				'_product_image_gallery'  => 'Comma-separated attachment IDs for the gallery.',
+				'_upsell_ids'             => 'Serialized array of upsell product IDs.',
+				'_crosssell_ids'          => 'Serialized array of cross-sell product IDs.',
+			),
+			'order' => array(
+				'_order_total'          => 'Order grand total.',
+				'_order_currency'       => 'Currency code at order time.',
+				'_billing_first_name'   => 'Billing first name.',
+				'_billing_last_name'    => 'Billing last name.',
+				'_billing_email'        => 'Billing email.',
+				'_customer_user'        => 'WP user ID (0 for guests).',
+				'_payment_method'       => 'Gateway ID.',
+				'_payment_method_title' => 'Gateway display label.',
+				'_transaction_id'       => 'Gateway transaction reference.',
+			),
+		),
+		'developer_notes' => array(
+			'hpos'      => 'High-Performance Order Storage (HPOS): if enabled, orders live in the wc_orders table. Detect with Automattic\\WooCommerce\\Utilities\\OrderUtil::custom_orders_table_usage_is_enabled().',
+			'hooks'     => array(
+				'woocommerce_single_product_summary'    => 'Insert content in the product summary area.',
+				'woocommerce_before_add_to_cart_button' => 'Insert content before add-to-cart.',
+				'woocommerce_thankyou'                  => 'Fires on the order confirmation page. Receives $order_id.',
+				'woocommerce_checkout_fields'           => 'Filter to add/modify checkout fields.',
+				'woocommerce_product_class'             => 'Filter to register custom product types.',
+			),
+			'functions' => array(
+				'wc_get_product($id)'    => 'Returns a WC_Product object.',
+				'wc_get_order($id)'      => 'Returns a WC_Order object.',
+				'wc_price($amount)'      => 'Formats a price with the store currency symbol.',
+				'wc_get_page_id($page)'  => 'Returns WooCommerce page ID by slug (shop, cart, checkout, myaccount).',
+				'WC()->cart'             => 'The WC_Cart instance.',
+				'WC()->session'          => 'The WC_Session instance.',
+				'WC()->customer'         => 'The WC_Customer instance.',
+			),
 		),
 	);
 }
