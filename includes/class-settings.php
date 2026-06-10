@@ -116,12 +116,12 @@ class LSX_MCP_UI_Settings {
 	 */
 	public static function save_from_post() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			return new WP_Error( 'permission', __( 'Insufficient permissions.', 'wp-mcp-ui' ) );
+			return new WP_Error( 'permission', __( 'Insufficient permissions.', 'lsx-mcp-ui' ) );
 		}
 
 		$nonce = isset( $_POST[ self::NONCE_NAME ] ) ? sanitize_key( $_POST[ self::NONCE_NAME ] ) : '';
 		if ( ! wp_verify_nonce( $nonce, self::NONCE_ACTION ) ) {
-			return new WP_Error( 'nonce', __( 'Security check failed. Please reload and try again.', 'wp-mcp-ui' ) );
+			return new WP_Error( 'nonce', __( 'Security check failed. Please reload and try again.', 'lsx-mcp-ui' ) );
 		}
 
 		// Read existing to preserve any keys we are not writing.

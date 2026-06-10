@@ -37,7 +37,7 @@ class LSX_MCP_UI_Admin_Page {
 			'lsx-mcp-admin',
 			plugin_dir_url( dirname( __FILE__ ) ) . 'assets/admin.css',
 			array(),
-			WPMCPUI_VERSION
+			LSXMCPUI_VERSION
 		);
 	}
 
@@ -95,7 +95,7 @@ class LSX_MCP_UI_Admin_Page {
 
 			<div class="lsx-mcp-header">
 				<h1>LightSpeed MCP</h1>
-				<span class="lsx-mcp-badge">v<?php echo esc_html( WPMCPUI_VERSION ); ?></span>
+				<span class="lsx-mcp-badge">v<?php echo esc_html( LSXMCPUI_VERSION ); ?></span>
 			</div>
 
 			<?php
@@ -319,7 +319,7 @@ class LSX_MCP_UI_Admin_Page {
 							</td>
 							<td>
 								<?php if ( $has_tour_op ) : ?>
-									<code>wpmcpui/get-tour-operator-context</code> — enable in <a href="<?php echo esc_url( admin_url( 'tools.php?page=wp-mcp-ui' ) ); ?>">Abilities</a>
+									<code>lsxmcpui/get-tour-operator-context</code> — enable in <a href="<?php echo esc_url( admin_url( 'tools.php?page=lsx-mcp-ui' ) ); ?>">Abilities</a>
 								<?php else : ?>
 									<span style="color:#787c82;">Install Tour Operator to unlock this ability.</span>
 								<?php endif; ?>
@@ -336,7 +336,7 @@ class LSX_MCP_UI_Admin_Page {
 							</td>
 							<td>
 								<?php if ( $has_woocommerce ) : ?>
-									<code>wpmcpui/get-woocommerce-context</code> — enable in <a href="<?php echo esc_url( admin_url( 'tools.php?page=wp-mcp-ui' ) ); ?>">Abilities</a>
+									<code>lsxmcpui/get-woocommerce-context</code> — enable in <a href="<?php echo esc_url( admin_url( 'tools.php?page=lsx-mcp-ui' ) ); ?>">Abilities</a>
 								<?php else : ?>
 									<span style="color:#787c82;">Install WooCommerce to unlock this ability.</span>
 								<?php endif; ?>
@@ -347,7 +347,7 @@ class LSX_MCP_UI_Admin_Page {
 
 				<p style="margin-top:1em;">
 					Manage which MCP abilities (read/write per content type) are enabled at
-					<a href="<?php echo esc_url( admin_url( 'tools.php?page=wp-mcp-ui' ) ); ?>">MCP UI &rarr; Abilities</a>.
+					<a href="<?php echo esc_url( admin_url( 'tools.php?page=lsx-mcp-ui' ) ); ?>">MCP UI &rarr; Abilities</a>.
 				</p>
 			</div>
 
@@ -644,7 +644,7 @@ class LSX_MCP_UI_Admin_Page {
 					<dd>Install and activate the <strong>WordPress MCP Adapter</strong> plugin. Without it, the <code>wp mcp-adapter serve</code> command and the HTTP endpoint do not exist.</dd>
 
 					<dt>Server starts but shows zero tools</dt>
-					<dd>MCP is enabled but no abilities are registered for it. For the LightSpeed server: check Status tab. For the default server: go to <a href="<?php echo esc_url( admin_url( 'tools.php?page=wp-mcp-ui' ) ); ?>">MCP UI &rarr; Abilities</a> and enable the abilities you need.</dd>
+					<dd>MCP is enabled but no abilities are registered for it. For the LightSpeed server: check Status tab. For the default server: go to <a href="<?php echo esc_url( admin_url( 'tools.php?page=lsx-mcp-ui' ) ); ?>">MCP UI &rarr; Abilities</a> and enable the abilities you need.</dd>
 
 					<dt>Application Passwords not visible (HTTP transport)</dt>
 					<dd>All conditions must be true: MCP enabled, App Password compatibility enabled, operational environment not blocked, host ends in <code><?php echo esc_html( $dev_suffix ); ?></code>. Check the Status tab for which condition is failing.</dd>
@@ -700,7 +700,7 @@ class LSX_MCP_UI_Admin_Page {
 						<td><strong>Default adapter server</strong></td>
 						<td><code>mcp-adapter-default-server</code></td>
 						<td>STDIO (local) or HTTP (dev site)</td>
-						<td>Content read/write abilities (<code>wpmcpui/*</code>), Yoast SEO, custom CPTs</td>
+						<td>Content read/write abilities (<code>lsxmcpui/*</code>), Yoast SEO, custom CPTs</td>
 					</tr>
 					<tr>
 						<td><strong>LightSpeed testing server</strong></td>
@@ -803,7 +803,7 @@ class LSX_MCP_UI_Admin_Page {
 			</div>
 
 			<h4>5. Verify</h4>
-			<p>After restarting, ask Claude: <em>"Discover the available WordPress abilities."</em> Claude will call <code>mcp-adapter-discover-abilities</code> and list all registered tools. You should see both <code>wpmcpui/*</code> tools (from the default server) and <code>lightspeed/*</code> tools (from the LightSpeed server) as separate namespaces.</p>
+			<p>After restarting, ask Claude: <em>"Discover the available WordPress abilities."</em> Claude will call <code>mcp-adapter-discover-abilities</code> and list all registered tools. You should see both <code>lsxmcpui/*</code> tools (from the default server) and <code>lightspeed/*</code> tools (from the LightSpeed server) as separate namespaces.</p>
 
 			<?php /* ── VSCODE ── */ ?>
 			<h3 id="doc-vscode">VS Code — MCP Servers panel</h3>
@@ -866,7 +866,7 @@ class LSX_MCP_UI_Admin_Page {
 
 			<p>A working connection returns a list of ability names grouped by server. You should see at least:</p>
 			<ul class="lsx-mcp-list">
-				<li><strong>Default server</strong> — <code>wpmcpui/get-site-info</code>, <code>wpmcpui/get-posts</code>, <code>wpmcpui/get-pages</code>, <code>wpmcpui/get-post-types</code>, and others</li>
+				<li><strong>Default server</strong> — <code>lsxmcpui/get-site-info</code>, <code>lsxmcpui/get-posts</code>, <code>lsxmcpui/get-pages</code>, <code>lsxmcpui/get-post-types</code>, and others</li>
 				<li><strong>LightSpeed server</strong> — <code>lightspeed/site-summary</code>, <code>lightspeed/plugin-inventory</code>, <code>lightspeed/theme-audit</code>, <code>lightspeed/url-inventory</code>, <code>lightspeed/content-readiness</code>, <code>lightspeed/block-theme-audit</code></li>
 			</ul>
 
@@ -875,45 +875,45 @@ class LSX_MCP_UI_Admin_Page {
 
 			<?php /* ── DEFAULT ABILITIES ── */ ?>
 			<h3 id="doc-default-abilities">Default server abilities (<code>mcp-adapter-default-server</code>)</h3>
-			<p>These abilities are managed at <a href="<?php echo esc_url( admin_url( 'tools.php?page=wp-mcp-ui' ) ); ?>">Tools → MCP Abilities</a>. Enable or disable each one from that page.</p>
+			<p>These abilities are managed at <a href="<?php echo esc_url( admin_url( 'tools.php?page=lsx-mcp-ui' ) ); ?>">Tools → MCP Abilities</a>. Enable or disable each one from that page.</p>
 
 			<table class="widefat striped">
 				<thead>
 					<tr><th>Ability</th><th>Access</th><th>Default</th><th>Description</th></tr>
 				</thead>
 				<tbody>
-					<tr><td><code>wpmcpui/get-site-info</code></td><td>Read</td><td>On</td><td>Site name, URL, tagline, WP version, language</td></tr>
-					<tr><td><code>wpmcpui/get-posts</code></td><td>Read</td><td>On</td><td>Blog posts with metadata, excerpt, categories, tags</td></tr>
-					<tr><td><code>wpmcpui/get-pages</code></td><td>Read</td><td>On</td><td>Published pages with title, URL, parent, status</td></tr>
-					<tr><td><code>wpmcpui/get-post-types</code></td><td>Read</td><td>On</td><td>All registered public post types with labels and REST base</td></tr>
-					<tr><td><code>wpmcpui/get-cpt-items</code></td><td>Read</td><td>On</td><td>Query any post type by slug; includes ACF fields when active</td></tr>
-					<tr><td><code>wpmcpui/get-categories</code></td><td>Read</td><td>On</td><td>Post categories with IDs, slugs, post counts</td></tr>
-					<tr><td><code>wpmcpui/get-tags</code></td><td>Read</td><td>On</td><td>Post tags with IDs, slugs, post counts</td></tr>
-					<tr><td><code>wpmcpui/get-patterns</code></td><td>Read</td><td>On</td><td>All registered block patterns with name, title, categories, content</td></tr>
-					<tr><td><code>wpmcpui/search</code></td><td>Read</td><td>On</td><td>Full-text search across all post types</td></tr>
-					<tr><td><code>wpmcpui/get-tour-operator-context</code></td><td>Read</td><td>Off</td><td>LSX Tour Operator developer context: CPT slugs, meta keys, taxonomies, modal system, Wetu field mappings</td></tr>
-					<tr><td><code>wpmcpui/get-comments</code></td><td>Read</td><td>Off</td><td>Comments with author, status, content snippet</td></tr>
-					<tr><td><code>wpmcpui/get-media</code></td><td>Read</td><td>Off</td><td>Media library items with title, URL, MIME type</td></tr>
-					<tr><td><code>wpmcpui/get-users</code></td><td>Read</td><td>Off</td><td>Users with display name, email, role</td></tr>
-					<tr><td><code>wpmcpui/get-plugins</code></td><td>Read</td><td>Off</td><td>All active plugins with name, version, author</td></tr>
-					<tr><td><code>wpmcpui/create-post</code></td><td><strong>Write</strong></td><td>Off</td><td>Create a new blog post</td></tr>
-					<tr><td><code>wpmcpui/update-post</code></td><td><strong>Write</strong></td><td>Off</td><td>Update an existing post by ID</td></tr>
-					<tr><td><code>wpmcpui/delete-post</code></td><td><strong>Write</strong></td><td>Off</td><td>Move a post to trash</td></tr>
-					<tr><td><code>wpmcpui/create-page</code></td><td><strong>Write</strong></td><td>Off</td><td>Create a new page</td></tr>
-					<tr><td><code>wpmcpui/update-page</code></td><td><strong>Write</strong></td><td>Off</td><td>Update a page by ID</td></tr>
-					<tr><td><code>wpmcpui/delete-page</code></td><td><strong>Write</strong></td><td>Off</td><td>Move a page to trash</td></tr>
-					<tr><td><code>wpmcpui/create-category</code></td><td><strong>Write</strong></td><td>Off</td><td>Create a new category</td></tr>
-					<tr><td><code>wpmcpui/create-tag</code></td><td><strong>Write</strong></td><td>Off</td><td>Create a new tag</td></tr>
-					<tr><td><code>wpmcpui/approve-comment</code></td><td><strong>Write</strong></td><td>Off</td><td>Approve a pending comment</td></tr>
-					<tr><td><code>wpmcpui/delete-comment</code></td><td><strong>Write</strong></td><td>Off</td><td>Move a comment to trash</td></tr>
-					<tr><td><code>wpmcpui/create-pattern</code></td><td><strong>Write</strong></td><td>Off</td><td>Write a new PHP pattern file to the active theme</td></tr>
-					<tr><td><code>wpmcpui/update-pattern</code></td><td><strong>Write</strong></td><td>Off</td><td>Overwrite an existing pattern file in the active theme</td></tr>
-					<tr><td><code>wpmcpui/delete-pattern</code></td><td><strong>Write</strong></td><td>Off</td><td>Delete a pattern PHP file from the active theme</td></tr>
+					<tr><td><code>lsxmcpui/get-site-info</code></td><td>Read</td><td>On</td><td>Site name, URL, tagline, WP version, language</td></tr>
+					<tr><td><code>lsxmcpui/get-posts</code></td><td>Read</td><td>On</td><td>Blog posts with metadata, excerpt, categories, tags</td></tr>
+					<tr><td><code>lsxmcpui/get-pages</code></td><td>Read</td><td>On</td><td>Published pages with title, URL, parent, status</td></tr>
+					<tr><td><code>lsxmcpui/get-post-types</code></td><td>Read</td><td>On</td><td>All registered public post types with labels and REST base</td></tr>
+					<tr><td><code>lsxmcpui/get-cpt-items</code></td><td>Read</td><td>On</td><td>Query any post type by slug; includes ACF fields when active</td></tr>
+					<tr><td><code>lsxmcpui/get-categories</code></td><td>Read</td><td>On</td><td>Post categories with IDs, slugs, post counts</td></tr>
+					<tr><td><code>lsxmcpui/get-tags</code></td><td>Read</td><td>On</td><td>Post tags with IDs, slugs, post counts</td></tr>
+					<tr><td><code>lsxmcpui/get-patterns</code></td><td>Read</td><td>On</td><td>All registered block patterns with name, title, categories, content</td></tr>
+					<tr><td><code>lsxmcpui/search</code></td><td>Read</td><td>On</td><td>Full-text search across all post types</td></tr>
+					<tr><td><code>lsxmcpui/get-tour-operator-context</code></td><td>Read</td><td>Off</td><td>LSX Tour Operator developer context: CPT slugs, meta keys, taxonomies, modal system, Wetu field mappings</td></tr>
+					<tr><td><code>lsxmcpui/get-comments</code></td><td>Read</td><td>Off</td><td>Comments with author, status, content snippet</td></tr>
+					<tr><td><code>lsxmcpui/get-media</code></td><td>Read</td><td>Off</td><td>Media library items with title, URL, MIME type</td></tr>
+					<tr><td><code>lsxmcpui/get-users</code></td><td>Read</td><td>Off</td><td>Users with display name, email, role</td></tr>
+					<tr><td><code>lsxmcpui/get-plugins</code></td><td>Read</td><td>Off</td><td>All active plugins with name, version, author</td></tr>
+					<tr><td><code>lsxmcpui/create-post</code></td><td><strong>Write</strong></td><td>Off</td><td>Create a new blog post</td></tr>
+					<tr><td><code>lsxmcpui/update-post</code></td><td><strong>Write</strong></td><td>Off</td><td>Update an existing post by ID</td></tr>
+					<tr><td><code>lsxmcpui/delete-post</code></td><td><strong>Write</strong></td><td>Off</td><td>Move a post to trash</td></tr>
+					<tr><td><code>lsxmcpui/create-page</code></td><td><strong>Write</strong></td><td>Off</td><td>Create a new page</td></tr>
+					<tr><td><code>lsxmcpui/update-page</code></td><td><strong>Write</strong></td><td>Off</td><td>Update a page by ID</td></tr>
+					<tr><td><code>lsxmcpui/delete-page</code></td><td><strong>Write</strong></td><td>Off</td><td>Move a page to trash</td></tr>
+					<tr><td><code>lsxmcpui/create-category</code></td><td><strong>Write</strong></td><td>Off</td><td>Create a new category</td></tr>
+					<tr><td><code>lsxmcpui/create-tag</code></td><td><strong>Write</strong></td><td>Off</td><td>Create a new tag</td></tr>
+					<tr><td><code>lsxmcpui/approve-comment</code></td><td><strong>Write</strong></td><td>Off</td><td>Approve a pending comment</td></tr>
+					<tr><td><code>lsxmcpui/delete-comment</code></td><td><strong>Write</strong></td><td>Off</td><td>Move a comment to trash</td></tr>
+					<tr><td><code>lsxmcpui/create-pattern</code></td><td><strong>Write</strong></td><td>Off</td><td>Write a new PHP pattern file to the active theme</td></tr>
+					<tr><td><code>lsxmcpui/update-pattern</code></td><td><strong>Write</strong></td><td>Off</td><td>Overwrite an existing pattern file in the active theme</td></tr>
+					<tr><td><code>lsxmcpui/delete-pattern</code></td><td><strong>Write</strong></td><td>Off</td><td>Delete a pattern PHP file from the active theme</td></tr>
 				</tbody>
 			</table>
 
 			<div class="lsx-mcp-note">
-				<strong>Write abilities are off by default.</strong> Enable them individually at <a href="<?php echo esc_url( admin_url( 'tools.php?page=wp-mcp-ui' ) ); ?>">Tools → MCP Abilities</a> only when you need them. Never enable write abilities on a shared or publicly accessible server.
+				<strong>Write abilities are off by default.</strong> Enable them individually at <a href="<?php echo esc_url( admin_url( 'tools.php?page=lsx-mcp-ui' ) ); ?>">Tools → MCP Abilities</a> only when you need them. Never enable write abilities on a shared or publicly accessible server.
 			</div>
 
 			<?php /* ── LIGHTSPEED ABILITIES ── */ ?>
@@ -991,7 +991,7 @@ class LSX_MCP_UI_Admin_Page {
 
 			<h4>Tour Operator developer context</h4>
 			<?php self::code_block(
-				"Run wpmcpui/get-tour-operator-context.\n" .
+				"Run lsxmcpui/get-tour-operator-context.\n" .
 				"I need to know the CPT slugs, all available meta keys for the 'tour' post type,\n" .
 				"and how the modal system works for accommodation listings.",
 				'Prompt'

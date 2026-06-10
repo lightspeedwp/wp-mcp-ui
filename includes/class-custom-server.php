@@ -67,7 +67,7 @@ class LSX_MCP_UI_Custom_Server {
 			self::SERVER_ROUTE,
 			self::SERVER_NAME,
 			self::SERVER_DESC,
-			WPMCPUI_VERSION,
+			LSXMCPUI_VERSION,
 			array( 'WP\\MCP\\Transport\\HttpTransport' ),
 			'WP\\MCP\\Infrastructure\\ErrorHandling\\ErrorLogMcpErrorHandler',
 			'WP\\MCP\\Infrastructure\\Observability\\NullMcpObservabilityHandler',

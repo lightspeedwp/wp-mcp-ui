@@ -3,7 +3,7 @@
  * Main plugin bootstrap for the LightSpeed MCP UI layer.
  *
  * Initialises optional modules based on the active constants and environment.
- * The existing wpmcpui_* ability registry is loaded separately via the main
+ * The existing lsxmcpui_* ability registry is loaded separately via the main
  * plugin file and is not affected by this class.
  *
  * @package LightSpeed\MCP_UI

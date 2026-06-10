@@ -14,8 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WPMCPUI_OPTION',  'wpmcpui_abilities' );
-define( 'WPMCPUI_VERSION', '1.0.0' );
+define( 'LSXMCPUI_OPTION',  'lsxmcpui_abilities' );
+define( 'LSXMCPUI_VERSION', '1.0.0' );
 
 // ─────────────────────────────────────────────────────────────────────────────
 // LIGHTSPEED MCP LAYER — modular includes
@@ -41,57 +41,57 @@ add_action( 'plugins_loaded', array( 'LSX_MCP_UI_Plugin', 'instance' ) );
 // ABILITY REGISTRY
 // ─────────────────────────────────────────────────────────────────────────────
 
-function wpmcpui_ability_registry() {
+function lsxmcpui_ability_registry() {
 	return array(
 		// POSTS
-		'wpmcpui/get-posts'   => array( 'label' => 'Read Posts',    'description' => 'List published blog posts (title, URL, date, excerpt, categories, tags).', 'group' => 'Posts',      'access' => 'read',  'default' => true  ),
-		'wpmcpui/create-post' => array( 'label' => 'Create Post',   'description' => 'Create a new blog post (title, content, status, categories, tags, slug).', 'group' => 'Posts',      'access' => 'write', 'default' => false ),
-		'wpmcpui/update-post' => array( 'label' => 'Update Post',   'description' => 'Update an existing post by ID.',                                            'group' => 'Posts',      'access' => 'write', 'default' => false ),
-		'wpmcpui/delete-post' => array( 'label' => 'Delete Post',   'description' => 'Move a post to trash by ID.',                                               'group' => 'Posts',      'access' => 'write', 'default' => false ),
+		'lsxmcpui/get-posts'   => array( 'label' => 'Read Posts',    'description' => 'List published blog posts (title, URL, date, excerpt, categories, tags).', 'group' => 'Posts',      'access' => 'read',  'default' => true  ),
+		'lsxmcpui/create-post' => array( 'label' => 'Create Post',   'description' => 'Create a new blog post (title, content, status, categories, tags, slug).', 'group' => 'Posts',      'access' => 'write', 'default' => false ),
+		'lsxmcpui/update-post' => array( 'label' => 'Update Post',   'description' => 'Update an existing post by ID.',                                            'group' => 'Posts',      'access' => 'write', 'default' => false ),
+		'lsxmcpui/delete-post' => array( 'label' => 'Delete Post',   'description' => 'Move a post to trash by ID.',                                               'group' => 'Posts',      'access' => 'write', 'default' => false ),
 		// PAGES
-		'wpmcpui/get-pages'   => array( 'label' => 'Read Pages',    'description' => 'List published pages (title, URL, parent, status).',                        'group' => 'Pages',      'access' => 'read',  'default' => true  ),
-		'wpmcpui/create-page' => array( 'label' => 'Create Page',   'description' => 'Create a new WordPress page (title, content, status, parent, slug).',       'group' => 'Pages',      'access' => 'write', 'default' => false ),
-		'wpmcpui/update-page' => array( 'label' => 'Update Page',   'description' => 'Update an existing page by ID.',                                            'group' => 'Pages',      'access' => 'write', 'default' => false ),
-		'wpmcpui/delete-page' => array( 'label' => 'Delete Page',   'description' => 'Move a page to trash by ID.',                                               'group' => 'Pages',      'access' => 'write', 'default' => false ),
+		'lsxmcpui/get-pages'   => array( 'label' => 'Read Pages',    'description' => 'List published pages (title, URL, parent, status).',                        'group' => 'Pages',      'access' => 'read',  'default' => true  ),
+		'lsxmcpui/create-page' => array( 'label' => 'Create Page',   'description' => 'Create a new WordPress page (title, content, status, parent, slug).',       'group' => 'Pages',      'access' => 'write', 'default' => false ),
+		'lsxmcpui/update-page' => array( 'label' => 'Update Page',   'description' => 'Update an existing page by ID.',                                            'group' => 'Pages',      'access' => 'write', 'default' => false ),
+		'lsxmcpui/delete-page' => array( 'label' => 'Delete Page',   'description' => 'Move a page to trash by ID.',                                               'group' => 'Pages',      'access' => 'write', 'default' => false ),
 		// POST TYPES
-		'wpmcpui/get-post-types' => array( 'label' => 'Read Post Types', 'description' => 'List all registered public post types with labels, supports, and REST base.', 'group' => 'Post Types', 'access' => 'read', 'default' => true  ),
-		'wpmcpui/get-cpt-items'  => array( 'label' => 'Read CPT Items',  'description' => 'Query items of any registered post type by slug (e.g. tour, destination, accommodation). Includes ACF fields when available.', 'group' => 'Post Types', 'access' => 'read', 'default' => true ),
+		'lsxmcpui/get-post-types' => array( 'label' => 'Read Post Types', 'description' => 'List all registered public post types with labels, supports, and REST base.', 'group' => 'Post Types', 'access' => 'read', 'default' => true  ),
+		'lsxmcpui/get-cpt-items'  => array( 'label' => 'Read CPT Items',  'description' => 'Query items of any registered post type by slug (e.g. tour, destination, accommodation). Includes ACF fields when available.', 'group' => 'Post Types', 'access' => 'read', 'default' => true ),
 		// TAXONOMY
-		'wpmcpui/get-categories'  => array( 'label' => 'Read Categories', 'description' => 'List all post categories with IDs, slugs, and post counts.', 'group' => 'Taxonomy', 'access' => 'read',  'default' => true  ),
-		'wpmcpui/create-category' => array( 'label' => 'Create Category', 'description' => 'Create a new post category.',                                'group' => 'Taxonomy', 'access' => 'write', 'default' => false ),
-		'wpmcpui/get-tags'        => array( 'label' => 'Read Tags',       'description' => 'List all post tags with IDs, slugs, and post counts.',       'group' => 'Taxonomy', 'access' => 'read',  'default' => true  ),
-		'wpmcpui/create-tag'      => array( 'label' => 'Create Tag',      'description' => 'Create a new post tag.',                                     'group' => 'Taxonomy', 'access' => 'write', 'default' => false ),
+		'lsxmcpui/get-categories'  => array( 'label' => 'Read Categories', 'description' => 'List all post categories with IDs, slugs, and post counts.', 'group' => 'Taxonomy', 'access' => 'read',  'default' => true  ),
+		'lsxmcpui/create-category' => array( 'label' => 'Create Category', 'description' => 'Create a new post category.',                                'group' => 'Taxonomy', 'access' => 'write', 'default' => false ),
+		'lsxmcpui/get-tags'        => array( 'label' => 'Read Tags',       'description' => 'List all post tags with IDs, slugs, and post counts.',       'group' => 'Taxonomy', 'access' => 'read',  'default' => true  ),
+		'lsxmcpui/create-tag'      => array( 'label' => 'Create Tag',      'description' => 'Create a new post tag.',                                     'group' => 'Taxonomy', 'access' => 'write', 'default' => false ),
 		// COMMENTS
-		'wpmcpui/get-comments'    => array( 'label' => 'Read Comments',   'description' => 'List comments with author, status, and content snippet.',    'group' => 'Comments', 'access' => 'read',  'default' => false ),
-		'wpmcpui/approve-comment' => array( 'label' => 'Approve Comment', 'description' => 'Approve a pending comment by ID.',                           'group' => 'Comments', 'access' => 'write', 'default' => false ),
-		'wpmcpui/delete-comment'  => array( 'label' => 'Delete Comment',  'description' => 'Move a comment to trash by ID.',                             'group' => 'Comments', 'access' => 'write', 'default' => false ),
+		'lsxmcpui/get-comments'    => array( 'label' => 'Read Comments',   'description' => 'List comments with author, status, and content snippet.',    'group' => 'Comments', 'access' => 'read',  'default' => false ),
+		'lsxmcpui/approve-comment' => array( 'label' => 'Approve Comment', 'description' => 'Approve a pending comment by ID.',                           'group' => 'Comments', 'access' => 'write', 'default' => false ),
+		'lsxmcpui/delete-comment'  => array( 'label' => 'Delete Comment',  'description' => 'Move a comment to trash by ID.',                             'group' => 'Comments', 'access' => 'write', 'default' => false ),
 		// MEDIA
-		'wpmcpui/get-media'       => array( 'label' => 'Read Media',      'description' => 'List media library items (title, URL, MIME type, date).',    'group' => 'Media',    'access' => 'read',  'default' => false ),
+		'lsxmcpui/get-media'       => array( 'label' => 'Read Media',      'description' => 'List media library items (title, URL, MIME type, date).',    'group' => 'Media',    'access' => 'read',  'default' => false ),
 		// USERS
-		'wpmcpui/get-users'       => array( 'label' => 'Read Users',      'description' => 'List users with display name, email, and role.',             'group' => 'Users',    'access' => 'read',  'default' => false ),
+		'lsxmcpui/get-users'       => array( 'label' => 'Read Users',      'description' => 'List users with display name, email, and role.',             'group' => 'Users',    'access' => 'read',  'default' => false ),
 		// SEARCH
-		'wpmcpui/search'          => array( 'label' => 'Search Content',  'description' => 'Search across all post types by keyword.',                   'group' => 'Search',   'access' => 'read',  'default' => true  ),
+		'lsxmcpui/search'          => array( 'label' => 'Search Content',  'description' => 'Search across all post types by keyword.',                   'group' => 'Search',   'access' => 'read',  'default' => true  ),
 		// SITE
-		'wpmcpui/get-site-info'   => array( 'label' => 'Read Site Info',  'description' => 'Return site name, URL, tagline, WP version, and language.', 'group' => 'Site',     'access' => 'read',  'default' => true  ),
-		'wpmcpui/get-plugins'     => array( 'label' => 'Read Plugins',    'description' => 'List all active plugins with name, version, and author.',    'group' => 'Site',     'access' => 'read',  'default' => false ),
+		'lsxmcpui/get-site-info'   => array( 'label' => 'Read Site Info',  'description' => 'Return site name, URL, tagline, WP version, and language.', 'group' => 'Site',     'access' => 'read',  'default' => true  ),
+		'lsxmcpui/get-plugins'     => array( 'label' => 'Read Plugins',    'description' => 'List all active plugins with name, version, and author.',    'group' => 'Site',     'access' => 'read',  'default' => false ),
 		// PATTERNS
-		'wpmcpui/get-patterns'   => array( 'label' => 'Read Patterns',   'description' => 'List all registered block patterns (theme + plugins) with name, title, categories, and content.', 'group' => 'Patterns', 'access' => 'read',  'default' => true  ),
-		'wpmcpui/create-pattern' => array( 'label' => 'Create Pattern',  'description' => 'Write a new PHP pattern file to the active theme\'s patterns/ directory.',                          'group' => 'Patterns', 'access' => 'write', 'default' => false ),
-		'wpmcpui/update-pattern' => array( 'label' => 'Update Pattern',  'description' => 'Overwrite an existing pattern file in the active theme\'s patterns/ directory.',                     'group' => 'Patterns', 'access' => 'write', 'default' => false ),
-		'wpmcpui/delete-pattern' => array( 'label' => 'Delete Pattern',  'description' => 'Delete a pattern PHP file from the active theme\'s patterns/ directory.',                            'group' => 'Patterns', 'access' => 'write', 'default' => false ),
+		'lsxmcpui/get-patterns'   => array( 'label' => 'Read Patterns',   'description' => 'List all registered block patterns (theme + plugins) with name, title, categories, and content.', 'group' => 'Patterns', 'access' => 'read',  'default' => true  ),
+		'lsxmcpui/create-pattern' => array( 'label' => 'Create Pattern',  'description' => 'Write a new PHP pattern file to the active theme\'s patterns/ directory.',                          'group' => 'Patterns', 'access' => 'write', 'default' => false ),
+		'lsxmcpui/update-pattern' => array( 'label' => 'Update Pattern',  'description' => 'Overwrite an existing pattern file in the active theme\'s patterns/ directory.',                     'group' => 'Patterns', 'access' => 'write', 'default' => false ),
+		'lsxmcpui/delete-pattern' => array( 'label' => 'Delete Pattern',  'description' => 'Delete a pattern PHP file from the active theme\'s patterns/ directory.',                            'group' => 'Patterns', 'access' => 'write', 'default' => false ),
 		// TOUR OPERATOR
-		'wpmcpui/get-tour-operator-context' => array( 'label' => 'Tour Operator Context', 'description' => 'Returns full developer context for Tour Operator sites: CPT slugs, all meta keys, taxonomy slugs, modal system details, CSS classes, and Wetu importer field mappings.', 'group' => 'Tour Operator', 'access' => 'read', 'default' => false ),
-		'wpmcpui/create-cpt-item' => array( 'label' => 'Create CPT Item', 'description' => 'Create an item of any registered custom post type with meta fields, taxonomy terms, and featured image.', 'group' => 'Post Types', 'access' => 'write', 'default' => false ),
-		'wpmcpui/update-cpt-item' => array( 'label' => 'Update CPT Item', 'description' => 'Update an existing CPT item by ID, including meta fields and taxonomy terms.', 'group' => 'Post Types', 'access' => 'write', 'default' => false ),
-		'wpmcpui/delete-cpt-item' => array( 'label' => 'Delete CPT Item', 'description' => 'Move a CPT item to trash by ID.', 'group' => 'Post Types', 'access' => 'write', 'default' => false ),
+		'lsxmcpui/get-tour-operator-context' => array( 'label' => 'Tour Operator Context', 'description' => 'Returns full developer context for Tour Operator sites: CPT slugs, all meta keys, taxonomy slugs, modal system details, CSS classes, and Wetu importer field mappings.', 'group' => 'Tour Operator', 'access' => 'read', 'default' => false ),
+		'lsxmcpui/create-cpt-item' => array( 'label' => 'Create CPT Item', 'description' => 'Create an item of any registered custom post type with meta fields, taxonomy terms, and featured image.', 'group' => 'Post Types', 'access' => 'write', 'default' => false ),
+		'lsxmcpui/update-cpt-item' => array( 'label' => 'Update CPT Item', 'description' => 'Update an existing CPT item by ID, including meta fields and taxonomy terms.', 'group' => 'Post Types', 'access' => 'write', 'default' => false ),
+		'lsxmcpui/delete-cpt-item' => array( 'label' => 'Delete CPT Item', 'description' => 'Move a CPT item to trash by ID.', 'group' => 'Post Types', 'access' => 'write', 'default' => false ),
 		// WOOCOMMERCE
-		'wpmcpui/get-woocommerce-context' => array( 'label' => 'WooCommerce Context', 'description' => 'Returns developer context for WooCommerce sites: CPTs, taxonomies, order statuses, pages, payment gateways, currency, and key meta keys.', 'group' => 'WooCommerce', 'access' => 'read', 'default' => false ),
+		'lsxmcpui/get-woocommerce-context' => array( 'label' => 'WooCommerce Context', 'description' => 'Returns developer context for WooCommerce sites: CPTs, taxonomies, order statuses, pages, payment gateways, currency, and key meta keys.', 'group' => 'WooCommerce', 'access' => 'read', 'default' => false ),
 	);
 }
 
-function wpmcpui_get_settings() {
-	$saved    = get_option( WPMCPUI_OPTION, array() );
-	$registry = wpmcpui_ability_registry();
+function lsxmcpui_get_settings() {
+	$saved    = get_option( LSXMCPUI_OPTION, array() );
+	$registry = lsxmcpui_ability_registry();
 	$settings = array();
 	foreach ( $registry as $key => $cfg ) {
 		$settings[ $key ] = isset( $saved[ $key ] ) ? (bool) $saved[ $key ] : $cfg['default'];
@@ -99,8 +99,8 @@ function wpmcpui_get_settings() {
 	return $settings;
 }
 
-function wpmcpui_is_enabled( $key ) {
-	$settings = wpmcpui_get_settings();
+function lsxmcpui_is_enabled( $key ) {
+	$settings = lsxmcpui_get_settings();
 	return ! empty( $settings[ $key ] );
 }
 
@@ -108,14 +108,14 @@ function wpmcpui_is_enabled( $key ) {
 // SETTINGS MANAGEMENT
 // ─────────────────────────────────────────────────────────────────────────────
 
-add_action( 'admin_init', 'wpmcpui_register_settings' );
-function wpmcpui_register_settings() {
-	register_setting( 'wpmcpui_settings_group', WPMCPUI_OPTION, array( 'sanitize_callback' => 'wpmcpui_sanitize_settings' ) );
+add_action( 'admin_init', 'lsxmcpui_register_settings' );
+function lsxmcpui_register_settings() {
+	register_setting( 'lsxmcpui_settings_group', LSXMCPUI_OPTION, array( 'sanitize_callback' => 'lsxmcpui_sanitize_settings' ) );
 }
 
-function wpmcpui_sanitize_settings( $input ) {
+function lsxmcpui_sanitize_settings( $input ) {
 	$clean = array();
-	foreach ( wpmcpui_ability_registry() as $key => $cfg ) {
+	foreach ( lsxmcpui_ability_registry() as $key => $cfg ) {
 		$clean[ $key ] = ! empty( $input[ $key ] );
 	}
 	return $clean;
@@ -125,14 +125,14 @@ function wpmcpui_sanitize_settings( $input ) {
 // ADMIN MENU
 // ─────────────────────────────────────────────────────────────────────────────
 
-add_action( 'admin_menu', 'wpmcpui_add_menu' );
-function wpmcpui_add_menu() {
+add_action( 'admin_menu', 'lsxmcpui_add_menu' );
+function lsxmcpui_add_menu() {
 	add_management_page(
 		'MCP Abilities',
 		'MCP Abilities',
 		'manage_options',
-		'wp-mcp-ui',
-		'wpmcpui_settings_page'
+		'lsx-mcp-ui',
+		'lsxmcpui_settings_page'
 	);
 }
 
@@ -140,9 +140,9 @@ function wpmcpui_add_menu() {
 // SETTINGS PAGE (Abilities)
 // ─────────────────────────────────────────────────────────────────────────────
 
-function wpmcpui_settings_page() {
-	$registry = wpmcpui_ability_registry();
-	$settings = wpmcpui_get_settings();
+function lsxmcpui_settings_page() {
+	$registry = lsxmcpui_ability_registry();
+	$settings = lsxmcpui_get_settings();
 
 	$groups = array();
 	foreach ( $registry as $key => $cfg ) {
@@ -177,89 +177,89 @@ function wpmcpui_settings_page() {
 	$write_locked = in_array( $op_env, array( 'lightspeed-dev-domain', 'staging', 'blocked' ), true );
 	?>
 	<style>
-		.wpmcpui-wrap { margin: 20px 0 0; padding-right: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-		.wpmcpui-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
-		.wpmcpui-header h1 { margin: 0; font-size: 22px; font-weight: 700; color: #1d2327; }
-		.wpmcpui-badge { background: #2271b1; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
-		.wpmcpui-desc { color: #646970; margin-bottom: 20px; font-size: 13.5px; line-height: 1.65; }
-		.wpmcpui-stats { display: grid; grid-template-columns: repeat(3, minmax(0,280px)); gap: 12px; margin-bottom: 24px; }
-		.wpmcpui-stat { background: #fff; border: 1px solid #dcdcde; border-radius: 8px; padding: 14px 20px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
-		.wpmcpui-stat-n { font-size: 30px; font-weight: 700; color: #1d2327; }
-		.wpmcpui-stat-l { font-size: 11px; color: #787c82; margin-top: 2px; text-transform: uppercase; letter-spacing: .5px; }
-		.wpmcpui-stat--on .wpmcpui-stat-n { color: #00a32a; }
-		.wpmcpui-stat--wr .wpmcpui-stat-n { color: #d63638; }
-		.wpmcpui-ability-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; }
-		.wpmcpui-group { background: #fff; border: 1px solid #dcdcde; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
-		.wpmcpui-gh { background: #f6f7f7; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #dcdcde; }
-		.wpmcpui-gt { font-weight: 700; font-size: 13.5px; color: #1d2327; margin: 0; display: flex; align-items: center; gap: 8px; }
-		.wpmcpui-toggle-all { font-size: 12px; color: #2271b1; cursor: pointer; text-decoration: underline; background: none; border: none; padding: 0; font-weight: 600; }
-		.wpmcpui-row { display: grid; grid-template-columns: 1fr 50px; align-items: center; padding: 13px 20px; border-bottom: 1px solid #f0f0f1; gap: 12px; transition: background .12s; }
-		.wpmcpui-row:last-child { border-bottom: none; }
-		.wpmcpui-row:hover { background: #fafafa; }
-		.wpmcpui-row.wpmcpui-row--locked { opacity: .65; }
-		.wpmcpui-row.wpmcpui-row--locked .wpmcpui-sw { cursor: not-allowed; }
-		.wpmcpui-row.wpmcpui-row--locked .wpmcpui-sl { cursor: not-allowed; }
-		.wpmcpui-al { font-weight: 600; font-size: 13px; color: #1d2327; display: flex; align-items: center; gap: 7px; margin-bottom: 3px; flex-wrap: wrap; }
-		.wpmcpui-ad { font-size: 12px; color: #787c82; line-height: 1.5; }
-		.wpmcpui-akey { font-size: 11px; color: #a7aaad; font-family: Consolas, Monaco, monospace; margin-top: 3px; }
-		.wpmcpui-ac { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; letter-spacing: .4px; white-space: nowrap; }
-		.wpmcpui-ac--read  { background: #e0f0fa; color: #2271b1; }
-		.wpmcpui-ac--write { background: #fde8e8; color: #d63638; }
-		.wpmcpui-ac--locked { background: #f0f0f1; color: #787c82; }
-		.wpmcpui-sw { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
-		.wpmcpui-sw input { opacity: 0; width: 0; height: 0; }
-		.wpmcpui-sl { position: absolute; cursor: pointer; inset: 0; background: #c3c4c7; border-radius: 34px; transition: .25s; }
-		.wpmcpui-sl:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .25s; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
-		input:checked + .wpmcpui-sl { background: #00a32a; }
-		input:checked + .wpmcpui-sl:before { transform: translateX(20px); }
-		input:disabled + .wpmcpui-sl { background: #c3c4c7 !important; cursor: not-allowed; }
-		.wpmcpui-savebar { display: flex; align-items: center; gap: 16px; margin-top: 24px; padding: 18px 20px; background: #fff; border: 1px solid #dcdcde; border-radius: 8px; }
-		.wpmcpui-savebar .button-primary { font-size: 14px; padding: 7px 20px; height: auto; }
-		.wpmcpui-savenote { font-size: 12px; color: #787c82; }
+		.lsxmcpui-wrap { margin: 20px 0 0; padding-right: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+		.lsxmcpui-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+		.lsxmcpui-header h1 { margin: 0; font-size: 22px; font-weight: 700; color: #1d2327; }
+		.lsxmcpui-badge { background: #2271b1; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; }
+		.lsxmcpui-desc { color: #646970; margin-bottom: 20px; font-size: 13.5px; line-height: 1.65; }
+		.lsxmcpui-stats { display: grid; grid-template-columns: repeat(3, minmax(0,280px)); gap: 12px; margin-bottom: 24px; }
+		.lsxmcpui-stat { background: #fff; border: 1px solid #dcdcde; border-radius: 8px; padding: 14px 20px; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+		.lsxmcpui-stat-n { font-size: 30px; font-weight: 700; color: #1d2327; }
+		.lsxmcpui-stat-l { font-size: 11px; color: #787c82; margin-top: 2px; text-transform: uppercase; letter-spacing: .5px; }
+		.lsxmcpui-stat--on .lsxmcpui-stat-n { color: #00a32a; }
+		.lsxmcpui-stat--wr .lsxmcpui-stat-n { color: #d63638; }
+		.lsxmcpui-ability-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; }
+		.lsxmcpui-group { background: #fff; border: 1px solid #dcdcde; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+		.lsxmcpui-gh { background: #f6f7f7; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #dcdcde; }
+		.lsxmcpui-gt { font-weight: 700; font-size: 13.5px; color: #1d2327; margin: 0; display: flex; align-items: center; gap: 8px; }
+		.lsxmcpui-toggle-all { font-size: 12px; color: #2271b1; cursor: pointer; text-decoration: underline; background: none; border: none; padding: 0; font-weight: 600; }
+		.lsxmcpui-row { display: grid; grid-template-columns: 1fr 50px; align-items: center; padding: 13px 20px; border-bottom: 1px solid #f0f0f1; gap: 12px; transition: background .12s; }
+		.lsxmcpui-row:last-child { border-bottom: none; }
+		.lsxmcpui-row:hover { background: #fafafa; }
+		.lsxmcpui-row.lsxmcpui-row--locked { opacity: .65; }
+		.lsxmcpui-row.lsxmcpui-row--locked .lsxmcpui-sw { cursor: not-allowed; }
+		.lsxmcpui-row.lsxmcpui-row--locked .lsxmcpui-sl { cursor: not-allowed; }
+		.lsxmcpui-al { font-weight: 600; font-size: 13px; color: #1d2327; display: flex; align-items: center; gap: 7px; margin-bottom: 3px; flex-wrap: wrap; }
+		.lsxmcpui-ad { font-size: 12px; color: #787c82; line-height: 1.5; }
+		.lsxmcpui-akey { font-size: 11px; color: #a7aaad; font-family: Consolas, Monaco, monospace; margin-top: 3px; }
+		.lsxmcpui-ac { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; text-transform: uppercase; letter-spacing: .4px; white-space: nowrap; }
+		.lsxmcpui-ac--read  { background: #e0f0fa; color: #2271b1; }
+		.lsxmcpui-ac--write { background: #fde8e8; color: #d63638; }
+		.lsxmcpui-ac--locked { background: #f0f0f1; color: #787c82; }
+		.lsxmcpui-sw { position: relative; display: inline-block; width: 46px; height: 26px; flex-shrink: 0; }
+		.lsxmcpui-sw input { opacity: 0; width: 0; height: 0; }
+		.lsxmcpui-sl { position: absolute; cursor: pointer; inset: 0; background: #c3c4c7; border-radius: 34px; transition: .25s; }
+		.lsxmcpui-sl:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: .25s; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+		input:checked + .lsxmcpui-sl { background: #00a32a; }
+		input:checked + .lsxmcpui-sl:before { transform: translateX(20px); }
+		input:disabled + .lsxmcpui-sl { background: #c3c4c7 !important; cursor: not-allowed; }
+		.lsxmcpui-savebar { display: flex; align-items: center; gap: 16px; margin-top: 24px; padding: 18px 20px; background: #fff; border: 1px solid #dcdcde; border-radius: 8px; }
+		.lsxmcpui-savebar .button-primary { font-size: 14px; padding: 7px 20px; height: auto; }
+		.lsxmcpui-savenote { font-size: 12px; color: #787c82; }
 		/* Write-lock banner */
-		.wpmcpui-write-lock-banner { display: flex; align-items: flex-start; gap: 12px; background: #fff8e5; border: 1px solid #f0c040; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; line-height: 1.6; color: #3c434a; }
-		.wpmcpui-write-lock-banner strong { color: #996a00; }
+		.lsxmcpui-write-lock-banner { display: flex; align-items: flex-start; gap: 12px; background: #fff8e5; border: 1px solid #f0c040; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; font-size: 13px; line-height: 1.6; color: #3c434a; }
+		.lsxmcpui-write-lock-banner strong { color: #996a00; }
 		/* Modal */
-		.wpmcpui-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 100000; display: flex; align-items: center; justify-content: center; }
-		.wpmcpui-modal-overlay[hidden] { display: none; }
-		.wpmcpui-modal-box { background: #fff; border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,.22); padding: 28px 32px; max-width: 480px; width: 90%; }
-		.wpmcpui-modal-box h2 { margin: 0 0 12px; font-size: 17px; font-weight: 700; color: #1d2327; }
-		.wpmcpui-modal-box p { margin: 0 0 12px; font-size: 13.5px; color: #3c434a; line-height: 1.65; }
-		.wpmcpui-modal-ability { background: #f6f7f7; border: 1px solid #dcdcde; border-radius: 6px; padding: 10px 14px; margin: 16px 0; font-size: 13px; }
-		.wpmcpui-modal-ability code { background: none; font-size: 12px; color: #646970; display: block; margin-top: 2px; }
-		.wpmcpui-modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
-		.wpmcpui-modal-actions .button { font-size: 13.5px; padding: 6px 16px; height: auto; }
-		.wpmcpui-modal-danger { background: #d63638 !important; border-color: #d63638 !important; color: #fff !important; }
-		.wpmcpui-modal-danger:hover { background: #b32d2e !important; border-color: #b32d2e !important; }
+		.lsxmcpui-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 100000; display: flex; align-items: center; justify-content: center; }
+		.lsxmcpui-modal-overlay[hidden] { display: none; }
+		.lsxmcpui-modal-box { background: #fff; border-radius: 10px; box-shadow: 0 8px 32px rgba(0,0,0,.22); padding: 28px 32px; max-width: 480px; width: 90%; }
+		.lsxmcpui-modal-box h2 { margin: 0 0 12px; font-size: 17px; font-weight: 700; color: #1d2327; }
+		.lsxmcpui-modal-box p { margin: 0 0 12px; font-size: 13.5px; color: #3c434a; line-height: 1.65; }
+		.lsxmcpui-modal-ability { background: #f6f7f7; border: 1px solid #dcdcde; border-radius: 6px; padding: 10px 14px; margin: 16px 0; font-size: 13px; }
+		.lsxmcpui-modal-ability code { background: none; font-size: 12px; color: #646970; display: block; margin-top: 2px; }
+		.lsxmcpui-modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+		.lsxmcpui-modal-actions .button { font-size: 13.5px; padding: 6px 16px; height: auto; }
+		.lsxmcpui-modal-danger { background: #d63638 !important; border-color: #d63638 !important; color: #fff !important; }
+		.lsxmcpui-modal-danger:hover { background: #b32d2e !important; border-color: #b32d2e !important; }
 	</style>
 
-	<div class="wpmcpui-wrap">
-		<div class="wpmcpui-header">
+	<div class="lsxmcpui-wrap">
+		<div class="lsxmcpui-header">
 			<h1>WP MCP UI — Abilities</h1>
-			<span class="wpmcpui-badge">v<?php echo esc_html( WPMCPUI_VERSION ); ?></span>
+			<span class="lsxmcpui-badge">v<?php echo esc_html( LSXMCPUI_VERSION ); ?></span>
 		</div>
-		<p class="wpmcpui-desc">
+		<p class="lsxmcpui-desc">
 			Control exactly what <strong>Claude AI</strong> can <strong>read</strong> and <strong>write</strong> on your WordPress site via MCP.
 			<span style="color:#d63638;font-weight:600;"> Write abilities modify live site content — enable with care.</span>
 		</p>
 
-		<div class="wpmcpui-stats">
-			<div class="wpmcpui-stat">
-				<div class="wpmcpui-stat-n"><?php echo esc_html( $total ); ?></div>
-				<div class="wpmcpui-stat-l">Total Abilities</div>
+		<div class="lsxmcpui-stats">
+			<div class="lsxmcpui-stat">
+				<div class="lsxmcpui-stat-n"><?php echo esc_html( $total ); ?></div>
+				<div class="lsxmcpui-stat-l">Total Abilities</div>
 			</div>
-			<div class="wpmcpui-stat wpmcpui-stat--on">
-				<div class="wpmcpui-stat-n"><?php echo esc_html( $enabled ); ?></div>
-				<div class="wpmcpui-stat-l">Enabled</div>
+			<div class="lsxmcpui-stat lsxmcpui-stat--on">
+				<div class="lsxmcpui-stat-n"><?php echo esc_html( $enabled ); ?></div>
+				<div class="lsxmcpui-stat-l">Enabled</div>
 			</div>
-			<div class="wpmcpui-stat wpmcpui-stat--wr">
-				<div class="wpmcpui-stat-n"><?php echo esc_html( $writes ); ?></div>
-				<div class="wpmcpui-stat-l">Write Access Active</div>
+			<div class="lsxmcpui-stat lsxmcpui-stat--wr">
+				<div class="lsxmcpui-stat-n"><?php echo esc_html( $writes ); ?></div>
+				<div class="lsxmcpui-stat-l">Write Access Active</div>
 			</div>
 		</div>
 
 		<?php if ( $write_locked ) : ?>
-		<div class="wpmcpui-write-lock-banner">
+		<div class="lsxmcpui-write-lock-banner">
 			<span style="font-size:20px;line-height:1;">🔒</span>
 			<div>
 				<strong>Write abilities are locked on this environment (<code style="color:inherit;"><?php echo esc_html( $op_env ); ?></code>).</strong><br>
@@ -269,39 +269,39 @@ function wpmcpui_settings_page() {
 		<?php endif; ?>
 
 		<form method="post" action="options.php">
-			<?php settings_fields( 'wpmcpui_settings_group' ); ?>
+			<?php settings_fields( 'lsxmcpui_settings_group' ); ?>
 
-			<div class="wpmcpui-ability-grid">
+			<div class="lsxmcpui-ability-grid">
 			<?php foreach ( $groups as $group_name => $abilities ) : ?>
-			<div class="wpmcpui-group">
-				<div class="wpmcpui-gh">
-					<h3 class="wpmcpui-gt">
+			<div class="lsxmcpui-group">
+				<div class="lsxmcpui-gh">
+					<h3 class="lsxmcpui-gt">
 						<?php echo $icons[ $group_name ] ?? '⚡'; ?>
 						<?php echo esc_html( $group_name ); ?>
 					</h3>
-					<button type="button" class="wpmcpui-toggle-all" data-group="<?php echo esc_attr( $group_name ); ?>">Toggle All</button>
+					<button type="button" class="lsxmcpui-toggle-all" data-group="<?php echo esc_attr( $group_name ); ?>">Toggle All</button>
 				</div>
 				<?php foreach ( $abilities as $key => $cfg ) :
 					$is_write  = 'write' === $cfg['access'];
 					$is_locked = $is_write && $write_locked;
 				?>
-				<div class="wpmcpui-row<?php echo $is_locked ? ' wpmcpui-row--locked' : ''; ?>">
+				<div class="lsxmcpui-row<?php echo $is_locked ? ' lsxmcpui-row--locked' : ''; ?>">
 					<div>
-						<div class="wpmcpui-al">
+						<div class="lsxmcpui-al">
 							<?php echo esc_html( $cfg['label'] ); ?>
 							<?php if ( $is_locked ) : ?>
-								<span class="wpmcpui-ac wpmcpui-ac--locked">locked</span>
+								<span class="lsxmcpui-ac lsxmcpui-ac--locked">locked</span>
 							<?php else : ?>
-								<span class="wpmcpui-ac wpmcpui-ac--<?php echo esc_attr( $cfg['access'] ); ?>"><?php echo esc_html( $cfg['access'] ); ?></span>
+								<span class="lsxmcpui-ac lsxmcpui-ac--<?php echo esc_attr( $cfg['access'] ); ?>"><?php echo esc_html( $cfg['access'] ); ?></span>
 							<?php endif; ?>
 						</div>
-						<div class="wpmcpui-ad"><?php echo esc_html( $cfg['description'] ); ?></div>
-						<div class="wpmcpui-akey"><?php echo esc_html( $key ); ?></div>
+						<div class="lsxmcpui-ad"><?php echo esc_html( $cfg['description'] ); ?></div>
+						<div class="lsxmcpui-akey"><?php echo esc_html( $key ); ?></div>
 					</div>
-					<label class="wpmcpui-sw">
+					<label class="lsxmcpui-sw">
 						<input
 							type="checkbox"
-							name="<?php echo esc_attr( WPMCPUI_OPTION ); ?>[<?php echo esc_attr( $key ); ?>]"
+							name="<?php echo esc_attr( LSXMCPUI_OPTION ); ?>[<?php echo esc_attr( $key ); ?>]"
 							value="1"
 							data-group="<?php echo esc_attr( $group_name ); ?>"
 							data-access="<?php echo esc_attr( $cfg['access'] ); ?>"
@@ -310,45 +310,45 @@ function wpmcpui_settings_page() {
 							<?php checked( ! empty( $settings[ $key ] ) ); ?>
 							<?php disabled( $is_locked ); ?>
 						>
-						<span class="wpmcpui-sl"></span>
+						<span class="lsxmcpui-sl"></span>
 					</label>
 				</div>
 				<?php endforeach; ?>
 			</div>
 			<?php endforeach; ?>
-			</div><!-- /.wpmcpui-ability-grid -->
+			</div><!-- /.lsxmcpui-ability-grid -->
 
-			<div class="wpmcpui-savebar">
+			<div class="lsxmcpui-savebar">
 				<?php submit_button( 'Save Settings', 'primary', 'submit', false ); ?>
-				<span class="wpmcpui-savenote">Changes take effect immediately for all active MCP sessions.</span>
+				<span class="lsxmcpui-savenote">Changes take effect immediately for all active MCP sessions.</span>
 			</div>
 		</form>
 	</div>
 
 	<!-- Write-ability confirmation modal -->
-	<div id="wpmcpui-modal" class="wpmcpui-modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="wpmcpui-modal-title">
-		<div class="wpmcpui-modal-box">
-			<h2 id="wpmcpui-modal-title">Enable Write Access?</h2>
+	<div id="lsxmcpui-modal" class="lsxmcpui-modal-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="lsxmcpui-modal-title">
+		<div class="lsxmcpui-modal-box">
+			<h2 id="lsxmcpui-modal-title">Enable Write Access?</h2>
 			<p>Write abilities allow Claude to <strong>create, modify, or delete live WordPress content</strong>. Changes made via write abilities are applied immediately and cannot be automatically undone.</p>
 			<p>Only enable write abilities on local development sites. Never use them on shared servers, staging environments, or anywhere real content could be affected.</p>
-			<div class="wpmcpui-modal-ability">
-				<strong id="wpmcpui-modal-label"></strong>
-				<code id="wpmcpui-modal-key"></code>
+			<div class="lsxmcpui-modal-ability">
+				<strong id="lsxmcpui-modal-label"></strong>
+				<code id="lsxmcpui-modal-key"></code>
 			</div>
-			<div class="wpmcpui-modal-actions">
-				<button type="button" class="button button-large" id="wpmcpui-modal-cancel">Cancel</button>
-				<button type="button" class="button button-large wpmcpui-modal-danger" id="wpmcpui-modal-confirm">Enable Write Access</button>
+			<div class="lsxmcpui-modal-actions">
+				<button type="button" class="button button-large" id="lsxmcpui-modal-cancel">Cancel</button>
+				<button type="button" class="button button-large lsxmcpui-modal-danger" id="lsxmcpui-modal-confirm">Enable Write Access</button>
 			</div>
 		</div>
 	</div>
 
 	<script>
 	document.addEventListener('DOMContentLoaded', function () {
-		var modal      = document.getElementById('wpmcpui-modal');
-		var modalLabel = document.getElementById('wpmcpui-modal-label');
-		var modalKey   = document.getElementById('wpmcpui-modal-key');
-		var confirmBtn = document.getElementById('wpmcpui-modal-confirm');
-		var cancelBtn  = document.getElementById('wpmcpui-modal-cancel');
+		var modal      = document.getElementById('lsxmcpui-modal');
+		var modalLabel = document.getElementById('lsxmcpui-modal-label');
+		var modalKey   = document.getElementById('lsxmcpui-modal-key');
+		var confirmBtn = document.getElementById('lsxmcpui-modal-confirm');
+		var cancelBtn  = document.getElementById('lsxmcpui-modal-cancel');
 		var pendingCb  = null;
 
 		function openModal( cb ) {
@@ -377,7 +377,7 @@ function wpmcpui_settings_page() {
 			});
 		});
 
-		document.querySelectorAll('.wpmcpui-toggle-all').forEach(function (btn) {
+		document.querySelectorAll('.lsxmcpui-toggle-all').forEach(function (btn) {
 			btn.addEventListener('click', function () {
 				var group = this.dataset.group;
 				var boxes = document.querySelectorAll('input[data-group="' + group + '"]:not(:disabled)');
@@ -394,12 +394,12 @@ function wpmcpui_settings_page() {
 // CONNECT PAGE (Config Files)
 // ─────────────────────────────────────────────────────────────────────────────
 
-function wpmcpui_connect_page() {
+function lsxmcpui_connect_page() {
 	$current_user = wp_get_current_user();
 	$username     = $current_user->exists() ? $current_user->user_login : 'your-wordpress-username';
 	$api_url      = untrailingslashit( rest_url( 'mcp/mcp-adapter-default-server' ) );
 	$site_domain  = parse_url( get_site_url(), PHP_URL_HOST );
-	$server_key   = 'wp-mcp-ui-' . trim( preg_replace( '/[^a-z0-9]+/', '-', strtolower( $site_domain ) ), '-' );
+	$server_key   = 'lsx-mcp-ui-' . trim( preg_replace( '/[^a-z0-9]+/', '-', strtolower( $site_domain ) ), '-' );
 
 	$base_env = array(
 		'WP_API_URL'      => $api_url,
@@ -444,48 +444,48 @@ function wpmcpui_connect_page() {
 		. "WP_API_PASSWORD = \"replace-with-your-application-password\"";
 	?>
 	<style>
-		.wpmcpui-wrap { max-width: 860px; margin: 30px 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-		.wpmcpui-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-		.wpmcpui-header h1 { margin: 0; font-size: 22px; font-weight: 700; color: #1d2327; }
-		.wpmcpui-desc { color: #646970; margin-bottom: 16px; font-size: 13.5px; line-height: 1.65; }
-		.wpmcpui-tabs { display: flex; gap: 0; margin-bottom: 0; border-bottom: 2px solid #dcdcde; }
-		.wpmcpui-tab-btn { background: none; border: none; padding: 10px 22px; font-size: 14px; font-weight: 600; color: #787c82; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: color .15s, border-color .15s; }
-		.wpmcpui-tab-btn:hover { color: #1d2327; }
-		.wpmcpui-tab-btn.active { color: #2271b1; border-bottom-color: #2271b1; }
-		.wpmcpui-tab-panel { display: none; }
-		.wpmcpui-tab-panel.active { display: block; }
-		.wpmcpui-config-box { background: #fff; border: 1px solid #dcdcde; border-top: none; border-radius: 0 0 8px 8px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
-		.wpmcpui-instructions { padding: 20px 20px 16px; border-bottom: 1px solid #f0f0f1; }
-		.wpmcpui-instructions ol { margin: 0; padding-left: 20px; color: #3c434a; font-size: 14px; line-height: 2; }
-		.wpmcpui-instructions code { background: #f0f0f1; padding: 2px 6px; border-radius: 4px; font-size: 12.5px; color: #d63638; font-family: Consolas, Monaco, monospace; }
-		.wpmcpui-note { margin-top: 14px; padding: 10px 14px; background: #f0f6fc; border-left: 3px solid #2271b1; border-radius: 0 4px 4px 0; font-size: 13px; color: #3c434a; line-height: 1.6; }
-		.wpmcpui-config-header { background: #f6f7f7; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #dcdcde; }
-		.wpmcpui-config-title { font-weight: 700; font-size: 13px; color: #1d2327; margin: 0; font-family: Consolas, Monaco, monospace; }
-		.wpmcpui-copy-btn { font-size: 12px; color: #2271b1; cursor: pointer; background: none; border: none; padding: 0; font-weight: 600; display: flex; align-items: center; gap: 4px; transition: color .2s; }
-		.wpmcpui-copy-btn:hover { color: #00a32a; }
-		.wpmcpui-code-area { background: #1e1e1e; color: #d4d4d4; padding: 20px; margin: 0; font-family: Consolas, Monaco, monospace; font-size: 13.5px; line-height: 1.6; overflow-x: auto; white-space: pre; }
+		.lsxmcpui-wrap { max-width: 860px; margin: 30px 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+		.lsxmcpui-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+		.lsxmcpui-header h1 { margin: 0; font-size: 22px; font-weight: 700; color: #1d2327; }
+		.lsxmcpui-desc { color: #646970; margin-bottom: 16px; font-size: 13.5px; line-height: 1.65; }
+		.lsxmcpui-tabs { display: flex; gap: 0; margin-bottom: 0; border-bottom: 2px solid #dcdcde; }
+		.lsxmcpui-tab-btn { background: none; border: none; padding: 10px 22px; font-size: 14px; font-weight: 600; color: #787c82; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: color .15s, border-color .15s; }
+		.lsxmcpui-tab-btn:hover { color: #1d2327; }
+		.lsxmcpui-tab-btn.active { color: #2271b1; border-bottom-color: #2271b1; }
+		.lsxmcpui-tab-panel { display: none; }
+		.lsxmcpui-tab-panel.active { display: block; }
+		.lsxmcpui-config-box { background: #fff; border: 1px solid #dcdcde; border-top: none; border-radius: 0 0 8px 8px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+		.lsxmcpui-instructions { padding: 20px 20px 16px; border-bottom: 1px solid #f0f0f1; }
+		.lsxmcpui-instructions ol { margin: 0; padding-left: 20px; color: #3c434a; font-size: 14px; line-height: 2; }
+		.lsxmcpui-instructions code { background: #f0f0f1; padding: 2px 6px; border-radius: 4px; font-size: 12.5px; color: #d63638; font-family: Consolas, Monaco, monospace; }
+		.lsxmcpui-note { margin-top: 14px; padding: 10px 14px; background: #f0f6fc; border-left: 3px solid #2271b1; border-radius: 0 4px 4px 0; font-size: 13px; color: #3c434a; line-height: 1.6; }
+		.lsxmcpui-config-header { background: #f6f7f7; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #dcdcde; }
+		.lsxmcpui-config-title { font-weight: 700; font-size: 13px; color: #1d2327; margin: 0; font-family: Consolas, Monaco, monospace; }
+		.lsxmcpui-copy-btn { font-size: 12px; color: #2271b1; cursor: pointer; background: none; border: none; padding: 0; font-weight: 600; display: flex; align-items: center; gap: 4px; transition: color .2s; }
+		.lsxmcpui-copy-btn:hover { color: #00a32a; }
+		.lsxmcpui-code-area { background: #1e1e1e; color: #d4d4d4; padding: 20px; margin: 0; font-family: Consolas, Monaco, monospace; font-size: 13.5px; line-height: 1.6; overflow-x: auto; white-space: pre; }
 	</style>
 
-	<div class="wpmcpui-wrap">
-		<div class="wpmcpui-header">
+	<div class="lsxmcpui-wrap">
+		<div class="lsxmcpui-header">
 			<h1>WP MCP UI — Connect</h1>
 		</div>
-		<p class="wpmcpui-desc">
+		<p class="lsxmcpui-desc">
 			Use the config below to connect your AI tool to this WordPress site. The API URL and username are pre-filled from the current environment —
 			verify them before copying, then generate an <strong>Application Password</strong> and replace the placeholder.
 		</p>
 
-		<div class="wpmcpui-tabs">
-			<button type="button" class="wpmcpui-tab-btn active" data-tab="claude-code">Claude Code</button>
-			<button type="button" class="wpmcpui-tab-btn" data-tab="vscode">VS Code</button>
-			<button type="button" class="wpmcpui-tab-btn" data-tab="claude-desktop">Claude Desktop</button>
-			<button type="button" class="wpmcpui-tab-btn" data-tab="codex">Codex</button>
+		<div class="lsxmcpui-tabs">
+			<button type="button" class="lsxmcpui-tab-btn active" data-tab="claude-code">Claude Code</button>
+			<button type="button" class="lsxmcpui-tab-btn" data-tab="vscode">VS Code</button>
+			<button type="button" class="lsxmcpui-tab-btn" data-tab="claude-desktop">Claude Desktop</button>
+			<button type="button" class="lsxmcpui-tab-btn" data-tab="codex">Codex</button>
 		</div>
 
 		<?php /* ── Tab: Claude Code (CLI) ── */ ?>
-		<div class="wpmcpui-tab-panel active" id="wpmcpui-tab-claude-code">
-			<div class="wpmcpui-config-box">
-				<div class="wpmcpui-instructions">
+		<div class="lsxmcpui-tab-panel active" id="lsxmcpui-tab-claude-code">
+			<div class="lsxmcpui-config-box">
+				<div class="lsxmcpui-instructions">
 					<ol>
 						<li>Go to <strong>Users &rarr; Profile</strong>, scroll to <strong>Application Passwords</strong>, generate a new password, and copy it.</li>
 						<li>In the config below, replace <code>replace-with-your-application-password</code> with your new password.</li>
@@ -496,24 +496,24 @@ function wpmcpui_connect_page() {
 						<li>If <code>mcpServers</code> already exists in that file, add the new server block inside it. If the file is new, paste the full JSON below as its entire content.</li>
 						<li>Save the file and restart the <code>claude</code> CLI. Verify with <code>claude mcp list</code>.</li>
 					</ol>
-					<p class="wpmcpui-note">
+					<p class="lsxmcpui-note">
 						<strong>Per-project config:</strong> You can also scope this to a single project by adding the same <code>mcpServers</code> block inside <code>.claude/settings.json</code> at your project root. Claude Code merges project and user configs, so the server will be available whenever you open that project.
 					</p>
 				</div>
-				<div class="wpmcpui-config-header">
-					<span class="wpmcpui-config-title">~/.claude/claude_desktop_config.json</span>
-					<button type="button" class="wpmcpui-copy-btn" data-code="wpmcpui-code-claude-code">
+				<div class="lsxmcpui-config-header">
+					<span class="lsxmcpui-config-title">~/.claude/claude_desktop_config.json</span>
+					<button type="button" class="lsxmcpui-copy-btn" data-code="lsxmcpui-code-claude-code">
 						<span class="dashicons dashicons-clipboard" style="font-size:16px;width:16px;height:16px;"></span> Copy
 					</button>
 				</div>
-				<pre class="wpmcpui-code-area" id="wpmcpui-code-claude-code"><?php echo esc_html( $claude_json ); ?></pre>
+				<pre class="lsxmcpui-code-area" id="lsxmcpui-code-claude-code"><?php echo esc_html( $claude_json ); ?></pre>
 			</div>
 		</div>
 
 		<?php /* ── Tab: VS Code ── */ ?>
-		<div class="wpmcpui-tab-panel" id="wpmcpui-tab-vscode">
-			<div class="wpmcpui-config-box">
-				<div class="wpmcpui-instructions">
+		<div class="lsxmcpui-tab-panel" id="lsxmcpui-tab-vscode">
+			<div class="lsxmcpui-config-box">
+				<div class="lsxmcpui-instructions">
 					<ol>
 						<li>Go to <strong>Users &rarr; Profile</strong>, scroll to <strong>Application Passwords</strong>, generate a new password, and copy it.</li>
 						<li>In the config below, replace <code>replace-with-your-application-password</code> with your new password.</li>
@@ -529,24 +529,24 @@ function wpmcpui_connect_page() {
 						</li>
 						<li>Save and reload VS Code. The server will appear under <strong>MCP Servers</strong> in the Claude / Copilot extension sidebar.</li>
 					</ol>
-					<p class="wpmcpui-note">
+					<p class="lsxmcpui-note">
 						MCP support in VS Code requires the <strong>GitHub Copilot</strong> extension (v1.99+) or a compatible Claude extension with MCP enabled.
 					</p>
 				</div>
-				<div class="wpmcpui-config-header">
-					<span class="wpmcpui-config-title">.vscode/mcp.json</span>
-					<button type="button" class="wpmcpui-copy-btn" data-code="wpmcpui-code-vscode">
+				<div class="lsxmcpui-config-header">
+					<span class="lsxmcpui-config-title">.vscode/mcp.json</span>
+					<button type="button" class="lsxmcpui-copy-btn" data-code="lsxmcpui-code-vscode">
 						<span class="dashicons dashicons-clipboard" style="font-size:16px;width:16px;height:16px;"></span> Copy
 					</button>
 				</div>
-				<pre class="wpmcpui-code-area" id="wpmcpui-code-vscode"><?php echo esc_html( $vscode_json ); ?></pre>
+				<pre class="lsxmcpui-code-area" id="lsxmcpui-code-vscode"><?php echo esc_html( $vscode_json ); ?></pre>
 			</div>
 		</div>
 
 		<?php /* ── Tab: Claude Desktop ── */ ?>
-		<div class="wpmcpui-tab-panel" id="wpmcpui-tab-claude-desktop">
-			<div class="wpmcpui-config-box">
-				<div class="wpmcpui-instructions">
+		<div class="lsxmcpui-tab-panel" id="lsxmcpui-tab-claude-desktop">
+			<div class="lsxmcpui-config-box">
+				<div class="lsxmcpui-instructions">
 					<ol>
 						<li>Go to <strong>Users &rarr; Profile</strong>, scroll to <strong>Application Passwords</strong>, generate a new password, and copy it.</li>
 						<li>In the config below, replace <code>replace-with-your-application-password</code> with your new password.</li>
@@ -558,20 +558,20 @@ function wpmcpui_connect_page() {
 						<li>Save the file, then <strong>fully quit and reopen</strong> Claude Desktop. Check <em>Settings &rarr; Developer</em> to confirm the server is listed and connected.</li>
 					</ol>
 				</div>
-				<div class="wpmcpui-config-header">
-					<span class="wpmcpui-config-title">claude_desktop_config.json</span>
-					<button type="button" class="wpmcpui-copy-btn" data-code="wpmcpui-code-claude-desktop">
+				<div class="lsxmcpui-config-header">
+					<span class="lsxmcpui-config-title">claude_desktop_config.json</span>
+					<button type="button" class="lsxmcpui-copy-btn" data-code="lsxmcpui-code-claude-desktop">
 						<span class="dashicons dashicons-clipboard" style="font-size:16px;width:16px;height:16px;"></span> Copy
 					</button>
 				</div>
-				<pre class="wpmcpui-code-area" id="wpmcpui-code-claude-desktop"><?php echo esc_html( $claude_json ); ?></pre>
+				<pre class="lsxmcpui-code-area" id="lsxmcpui-code-claude-desktop"><?php echo esc_html( $claude_json ); ?></pre>
 			</div>
 		</div>
 
 		<?php /* ── Tab: Codex ── */ ?>
-		<div class="wpmcpui-tab-panel" id="wpmcpui-tab-codex">
-			<div class="wpmcpui-config-box">
-				<div class="wpmcpui-instructions">
+		<div class="lsxmcpui-tab-panel" id="lsxmcpui-tab-codex">
+			<div class="lsxmcpui-config-box">
+				<div class="lsxmcpui-instructions">
 					<ol>
 						<li>Go to <strong>Users &rarr; Profile</strong>, scroll to <strong>Application Passwords</strong>, generate a new password, and copy it.</li>
 						<li>In the config below, replace <code>replace-with-your-application-password</code> with your new password.</li>
@@ -579,13 +579,13 @@ function wpmcpui_connect_page() {
 						<li>Save the file — Codex picks up the change on next run.</li>
 					</ol>
 				</div>
-				<div class="wpmcpui-config-header">
-					<span class="wpmcpui-config-title">~/.codex/config.toml</span>
-					<button type="button" class="wpmcpui-copy-btn" data-code="wpmcpui-code-codex">
+				<div class="lsxmcpui-config-header">
+					<span class="lsxmcpui-config-title">~/.codex/config.toml</span>
+					<button type="button" class="lsxmcpui-copy-btn" data-code="lsxmcpui-code-codex">
 						<span class="dashicons dashicons-clipboard" style="font-size:16px;width:16px;height:16px;"></span> Copy
 					</button>
 				</div>
-				<pre class="wpmcpui-code-area" id="wpmcpui-code-codex"><?php echo esc_html( $toml_config ); ?></pre>
+				<pre class="lsxmcpui-code-area" id="lsxmcpui-code-codex"><?php echo esc_html( $toml_config ); ?></pre>
 			</div>
 		</div>
 	</div>
@@ -593,18 +593,18 @@ function wpmcpui_connect_page() {
 	<script>
 	document.addEventListener('DOMContentLoaded', function () {
 		// Tab switching
-		document.querySelectorAll('.wpmcpui-tab-btn').forEach(function (btn) {
+		document.querySelectorAll('.lsxmcpui-tab-btn').forEach(function (btn) {
 			btn.addEventListener('click', function () {
 				var tab = btn.dataset.tab;
-				document.querySelectorAll('.wpmcpui-tab-btn').forEach(function (b) { b.classList.remove('active'); });
-				document.querySelectorAll('.wpmcpui-tab-panel').forEach(function (p) { p.classList.remove('active'); });
+				document.querySelectorAll('.lsxmcpui-tab-btn').forEach(function (b) { b.classList.remove('active'); });
+				document.querySelectorAll('.lsxmcpui-tab-panel').forEach(function (p) { p.classList.remove('active'); });
 				btn.classList.add('active');
-				document.getElementById('wpmcpui-tab-' + tab).classList.add('active');
+				document.getElementById('lsxmcpui-tab-' + tab).classList.add('active');
 			});
 		});
 
 		// Copy buttons
-		document.querySelectorAll('.wpmcpui-copy-btn').forEach(function (btn) {
+		document.querySelectorAll('.lsxmcpui-copy-btn').forEach(function (btn) {
 			btn.addEventListener('click', function () {
 				var el = document.getElementById(btn.dataset.code);
 				if (!el) return;
@@ -627,9 +627,9 @@ function wpmcpui_connect_page() {
 // ABILITY CATEGORY
 // ─────────────────────────────────────────────────────────────────────────────
 
-add_action( 'wp_abilities_api_categories_init', 'wpmcpui_register_ability_category' );
-function wpmcpui_register_ability_category() {
-	wp_register_ability_category( 'wpmcpui', array(
+add_action( 'wp_abilities_api_categories_init', 'lsxmcpui_register_ability_category' );
+function lsxmcpui_register_ability_category() {
+	wp_register_ability_category( 'lsxmcpui', array(
 		'label'       => 'WP MCP UI',
 		'description' => 'WordPress content abilities managed by WP MCP UI.',
 	) );
@@ -639,18 +639,18 @@ function wpmcpui_register_ability_category() {
 // REGISTER ABILITIES
 // ─────────────────────────────────────────────────────────────────────────────
 
-add_action( 'wp_abilities_api_init', 'wpmcpui_register_all_abilities' );
-function wpmcpui_register_all_abilities() {
+add_action( 'wp_abilities_api_init', 'lsxmcpui_register_all_abilities' );
+function lsxmcpui_register_all_abilities() {
 
 	$base = array(
-		'category'      => 'wpmcpui',
+		'category'      => 'lsxmcpui',
 		'output_schema' => array( 'type' => 'object' ),
 		'meta'          => array( 'mcp' => array( 'public' => true ) ),
 	);
 
 	// ── GET POSTS ──────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-posts' ) ) {
-		wp_register_ability( 'wpmcpui/get-posts', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-posts' ) ) {
+		wp_register_ability( 'lsxmcpui/get-posts', array_merge( $base, array(
 			'label'       => 'Get Blog Posts',
 			'description' => 'Returns blog posts with full metadata.',
 			'input_schema' => array(
@@ -661,13 +661,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => '__return_true',
-			'execute_callback'   => 'wpmcpui_execute_get_posts',
+			'execute_callback'   => 'lsxmcpui_execute_get_posts',
 		) ) );
 	}
 
 	// ── CREATE POST ────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/create-post' ) ) {
-		wp_register_ability( 'wpmcpui/create-post', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/create-post' ) ) {
+		wp_register_ability( 'lsxmcpui/create-post', array_merge( $base, array(
 			'label'       => 'Create Post',
 			'description' => 'Creates a new blog post.',
 			'input_schema' => array(
@@ -684,13 +684,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'publish_posts' ); },
-			'execute_callback'   => 'wpmcpui_execute_create_post',
+			'execute_callback'   => 'lsxmcpui_execute_create_post',
 		) ) );
 	}
 
 	// ── UPDATE POST ────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/update-post' ) ) {
-		wp_register_ability( 'wpmcpui/update-post', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/update-post' ) ) {
+		wp_register_ability( 'lsxmcpui/update-post', array_merge( $base, array(
 			'label'       => 'Update Post',
 			'description' => 'Updates an existing post.',
 			'input_schema' => array(
@@ -706,13 +706,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'edit_posts' ); },
-			'execute_callback'   => 'wpmcpui_execute_update_post',
+			'execute_callback'   => 'lsxmcpui_execute_update_post',
 		) ) );
 	}
 
 	// ── DELETE POST ────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/delete-post' ) ) {
-		wp_register_ability( 'wpmcpui/delete-post', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/delete-post' ) ) {
+		wp_register_ability( 'lsxmcpui/delete-post', array_merge( $base, array(
 			'label'       => 'Delete Post',
 			'description' => 'Moves a post to trash.',
 			'input_schema' => array(
@@ -723,24 +723,24 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'delete_posts' ); },
-			'execute_callback'   => 'wpmcpui_execute_delete_post',
+			'execute_callback'   => 'lsxmcpui_execute_delete_post',
 		) ) );
 	}
 
 	// ── GET PAGES ──────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-pages' ) ) {
-		wp_register_ability( 'wpmcpui/get-pages', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-pages' ) ) {
+		wp_register_ability( 'lsxmcpui/get-pages', array_merge( $base, array(
 			'label'       => 'Get Pages',
 			'description' => 'Returns published pages.',
 			'input_schema' => array( 'type' => 'object', 'properties' => array() ),
 			'permission_callback' => '__return_true',
-			'execute_callback'   => 'wpmcpui_execute_get_pages',
+			'execute_callback'   => 'lsxmcpui_execute_get_pages',
 		) ) );
 	}
 
 	// ── CREATE PAGE ────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/create-page' ) ) {
-		wp_register_ability( 'wpmcpui/create-page', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/create-page' ) ) {
+		wp_register_ability( 'lsxmcpui/create-page', array_merge( $base, array(
 			'label'       => 'Create Page',
 			'description' => 'Creates a new page.',
 			'input_schema' => array(
@@ -755,13 +755,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'publish_pages' ); },
-			'execute_callback'   => 'wpmcpui_execute_create_page',
+			'execute_callback'   => 'lsxmcpui_execute_create_page',
 		) ) );
 	}
 
 	// ── UPDATE PAGE ────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/update-page' ) ) {
-		wp_register_ability( 'wpmcpui/update-page', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/update-page' ) ) {
+		wp_register_ability( 'lsxmcpui/update-page', array_merge( $base, array(
 			'label'       => 'Update Page',
 			'description' => 'Updates an existing page.',
 			'input_schema' => array(
@@ -775,13 +775,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'edit_pages' ); },
-			'execute_callback'   => 'wpmcpui_execute_update_page',
+			'execute_callback'   => 'lsxmcpui_execute_update_page',
 		) ) );
 	}
 
 	// ── DELETE PAGE ────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/delete-page' ) ) {
-		wp_register_ability( 'wpmcpui/delete-page', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/delete-page' ) ) {
+		wp_register_ability( 'lsxmcpui/delete-page', array_merge( $base, array(
 			'label'       => 'Delete Page',
 			'description' => 'Moves a page to trash.',
 			'input_schema' => array(
@@ -792,13 +792,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'delete_pages' ); },
-			'execute_callback'   => 'wpmcpui_execute_delete_page',
+			'execute_callback'   => 'lsxmcpui_execute_delete_page',
 		) ) );
 	}
 
 	// ── GET POST TYPES ─────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-post-types' ) ) {
-		wp_register_ability( 'wpmcpui/get-post-types', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-post-types' ) ) {
+		wp_register_ability( 'lsxmcpui/get-post-types', array_merge( $base, array(
 			'label'       => 'Get Post Types',
 			'description' => 'Returns all registered public post types.',
 			'input_schema' => array(
@@ -808,13 +808,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => '__return_true',
-			'execute_callback'   => 'wpmcpui_execute_get_post_types',
+			'execute_callback'   => 'lsxmcpui_execute_get_post_types',
 		) ) );
 	}
 
 	// ── GET CPT ITEMS ──────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-cpt-items' ) ) {
-		wp_register_ability( 'wpmcpui/get-cpt-items', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-cpt-items' ) ) {
+		wp_register_ability( 'lsxmcpui/get-cpt-items', array_merge( $base, array(
 			'label'       => 'Get CPT Items',
 			'description' => 'Query items of any registered post type by slug. Includes ACF fields when available.',
 			'input_schema' => array(
@@ -830,24 +830,24 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => '__return_true',
-			'execute_callback'   => 'wpmcpui_execute_get_cpt_items',
+			'execute_callback'   => 'lsxmcpui_execute_get_cpt_items',
 		) ) );
 	}
 
 	// ── GET CATEGORIES ─────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-categories' ) ) {
-		wp_register_ability( 'wpmcpui/get-categories', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-categories' ) ) {
+		wp_register_ability( 'lsxmcpui/get-categories', array_merge( $base, array(
 			'label'       => 'Get Categories',
 			'description' => 'Returns all categories.',
 			'input_schema' => array( 'type' => 'object', 'properties' => array() ),
 			'permission_callback' => '__return_true',
-			'execute_callback'   => 'wpmcpui_execute_get_categories',
+			'execute_callback'   => 'lsxmcpui_execute_get_categories',
 		) ) );
 	}
 
 	// ── CREATE CATEGORY ────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/create-category' ) ) {
-		wp_register_ability( 'wpmcpui/create-category', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/create-category' ) ) {
+		wp_register_ability( 'lsxmcpui/create-category', array_merge( $base, array(
 			'label'       => 'Create Category',
 			'description' => 'Creates a new category.',
 			'input_schema' => array(
@@ -860,24 +860,24 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'manage_categories' ); },
-			'execute_callback'   => 'wpmcpui_execute_create_category',
+			'execute_callback'   => 'lsxmcpui_execute_create_category',
 		) ) );
 	}
 
 	// ── GET TAGS ───────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-tags' ) ) {
-		wp_register_ability( 'wpmcpui/get-tags', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-tags' ) ) {
+		wp_register_ability( 'lsxmcpui/get-tags', array_merge( $base, array(
 			'label'       => 'Get Tags',
 			'description' => 'Returns all tags.',
 			'input_schema' => array( 'type' => 'object', 'properties' => array() ),
 			'permission_callback' => '__return_true',
-			'execute_callback'   => 'wpmcpui_execute_get_tags',
+			'execute_callback'   => 'lsxmcpui_execute_get_tags',
 		) ) );
 	}
 
 	// ── CREATE TAG ─────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/create-tag' ) ) {
-		wp_register_ability( 'wpmcpui/create-tag', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/create-tag' ) ) {
+		wp_register_ability( 'lsxmcpui/create-tag', array_merge( $base, array(
 			'label'       => 'Create Tag',
 			'description' => 'Creates a new tag.',
 			'input_schema' => array(
@@ -889,13 +889,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'manage_categories' ); },
-			'execute_callback'   => 'wpmcpui_execute_create_tag',
+			'execute_callback'   => 'lsxmcpui_execute_create_tag',
 		) ) );
 	}
 
 	// ── GET COMMENTS ───────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-comments' ) ) {
-		wp_register_ability( 'wpmcpui/get-comments', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-comments' ) ) {
+		wp_register_ability( 'lsxmcpui/get-comments', array_merge( $base, array(
 			'label'       => 'Get Comments',
 			'description' => 'Returns comments.',
 			'input_schema' => array(
@@ -906,13 +906,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'moderate_comments' ); },
-			'execute_callback'   => 'wpmcpui_execute_get_comments',
+			'execute_callback'   => 'lsxmcpui_execute_get_comments',
 		) ) );
 	}
 
 	// ── APPROVE COMMENT ────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/approve-comment' ) ) {
-		wp_register_ability( 'wpmcpui/approve-comment', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/approve-comment' ) ) {
+		wp_register_ability( 'lsxmcpui/approve-comment', array_merge( $base, array(
 			'label'       => 'Approve Comment',
 			'description' => 'Approves a pending comment.',
 			'input_schema' => array(
@@ -923,13 +923,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'moderate_comments' ); },
-			'execute_callback'   => 'wpmcpui_execute_approve_comment',
+			'execute_callback'   => 'lsxmcpui_execute_approve_comment',
 		) ) );
 	}
 
 	// ── DELETE COMMENT ─────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/delete-comment' ) ) {
-		wp_register_ability( 'wpmcpui/delete-comment', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/delete-comment' ) ) {
+		wp_register_ability( 'lsxmcpui/delete-comment', array_merge( $base, array(
 			'label'       => 'Delete Comment',
 			'description' => 'Trashes a comment.',
 			'input_schema' => array(
@@ -940,13 +940,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'moderate_comments' ); },
-			'execute_callback'   => 'wpmcpui_execute_delete_comment',
+			'execute_callback'   => 'lsxmcpui_execute_delete_comment',
 		) ) );
 	}
 
 	// ── GET MEDIA ──────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-media' ) ) {
-		wp_register_ability( 'wpmcpui/get-media', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-media' ) ) {
+		wp_register_ability( 'lsxmcpui/get-media', array_merge( $base, array(
 			'label'       => 'Get Media',
 			'description' => 'Lists media library items.',
 			'input_schema' => array(
@@ -957,24 +957,24 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'upload_files' ); },
-			'execute_callback'   => 'wpmcpui_execute_get_media',
+			'execute_callback'   => 'lsxmcpui_execute_get_media',
 		) ) );
 	}
 
 	// ── GET USERS ──────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-users' ) ) {
-		wp_register_ability( 'wpmcpui/get-users', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-users' ) ) {
+		wp_register_ability( 'lsxmcpui/get-users', array_merge( $base, array(
 			'label'       => 'Get Users',
 			'description' => 'Lists registered users.',
 			'input_schema' => array( 'type' => 'object', 'properties' => array() ),
 			'permission_callback' => function () { return current_user_can( 'list_users' ); },
-			'execute_callback'   => 'wpmcpui_execute_get_users',
+			'execute_callback'   => 'lsxmcpui_execute_get_users',
 		) ) );
 	}
 
 	// ── SEARCH ─────────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/search' ) ) {
-		wp_register_ability( 'wpmcpui/search', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/search' ) ) {
+		wp_register_ability( 'lsxmcpui/search', array_merge( $base, array(
 			'label'       => 'Search Content',
 			'description' => 'Search across all post types by keyword.',
 			'input_schema' => array(
@@ -987,35 +987,35 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => '__return_true',
-			'execute_callback'   => 'wpmcpui_execute_search',
+			'execute_callback'   => 'lsxmcpui_execute_search',
 		) ) );
 	}
 
 	// ── GET SITE INFO ──────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-site-info' ) ) {
-		wp_register_ability( 'wpmcpui/get-site-info', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-site-info' ) ) {
+		wp_register_ability( 'lsxmcpui/get-site-info', array_merge( $base, array(
 			'label'       => 'Get Site Info',
 			'description' => 'Returns site metadata.',
 			'input_schema' => array( 'type' => 'object', 'properties' => array() ),
 			'permission_callback' => '__return_true',
-			'execute_callback'   => 'wpmcpui_execute_get_site_info',
+			'execute_callback'   => 'lsxmcpui_execute_get_site_info',
 		) ) );
 	}
 
 	// ── GET PLUGINS ────────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-plugins' ) ) {
-		wp_register_ability( 'wpmcpui/get-plugins', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-plugins' ) ) {
+		wp_register_ability( 'lsxmcpui/get-plugins', array_merge( $base, array(
 			'label'       => 'Get Active Plugins',
 			'description' => 'Lists active plugins.',
 			'input_schema' => array( 'type' => 'object', 'properties' => array() ),
 			'permission_callback' => function () { return current_user_can( 'activate_plugins' ); },
-			'execute_callback'   => 'wpmcpui_execute_get_plugins',
+			'execute_callback'   => 'lsxmcpui_execute_get_plugins',
 		) ) );
 	}
 
 	// ── GET PATTERNS ───────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-patterns' ) ) {
-		wp_register_ability( 'wpmcpui/get-patterns', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-patterns' ) ) {
+		wp_register_ability( 'lsxmcpui/get-patterns', array_merge( $base, array(
 			'label'       => 'Get Block Patterns',
 			'description' => 'Lists all registered block patterns.',
 			'input_schema' => array(
@@ -1025,13 +1025,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'edit_posts' ); },
-			'execute_callback'   => 'wpmcpui_execute_get_patterns',
+			'execute_callback'   => 'lsxmcpui_execute_get_patterns',
 		) ) );
 	}
 
 	// ── CREATE PATTERN ─────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/create-pattern' ) ) {
-		wp_register_ability( 'wpmcpui/create-pattern', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/create-pattern' ) ) {
+		wp_register_ability( 'lsxmcpui/create-pattern', array_merge( $base, array(
 			'label'       => 'Create Pattern',
 			'description' => 'Writes a new PHP pattern file to the active theme\'s patterns/ directory.',
 			'input_schema' => array(
@@ -1040,7 +1040,7 @@ function wpmcpui_register_all_abilities() {
 				'properties' => array(
 					'filename'       => array( 'type' => 'string',  'description' => 'PHP filename, e.g. hero-banner.php. No path separators.' ),
 					'title'          => array( 'type' => 'string',  'description' => 'Human-readable pattern title.' ),
-					'slug'           => array( 'type' => 'string',  'description' => 'Pattern slug. The prefix MUST be the active theme stylesheet slug, e.g. ati-theme-2026/hero-banner. If unsure of the theme slug, call wpmcpui/get-site-info first.' ),
+					'slug'           => array( 'type' => 'string',  'description' => 'Pattern slug. The prefix MUST be the active theme stylesheet slug, e.g. ati-theme-2026/hero-banner. If unsure of the theme slug, call lsxmcpui/get-site-info first.' ),
 					'description'    => array( 'type' => 'string',  'description' => 'Optional pattern description.' ),
 					'categories'     => array( 'type' => 'string',  'description' => 'Comma-separated category slugs, e.g. featured, banner.' ),
 					'block_types'    => array( 'type' => 'string',  'description' => 'Comma-separated block types this pattern inserts, e.g. core/cover.' ),
@@ -1050,13 +1050,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'edit_theme_options' ); },
-			'execute_callback'   => 'wpmcpui_execute_create_pattern',
+			'execute_callback'   => 'lsxmcpui_execute_create_pattern',
 		) ) );
 	}
 
 	// ── UPDATE PATTERN ─────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/update-pattern' ) ) {
-		wp_register_ability( 'wpmcpui/update-pattern', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/update-pattern' ) ) {
+		wp_register_ability( 'lsxmcpui/update-pattern', array_merge( $base, array(
 			'label'       => 'Update Pattern',
 			'description' => 'Overwrites an existing pattern file in the active theme\'s patterns/ directory.',
 			'input_schema' => array(
@@ -1068,13 +1068,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'edit_theme_options' ); },
-			'execute_callback'   => 'wpmcpui_execute_update_pattern',
+			'execute_callback'   => 'lsxmcpui_execute_update_pattern',
 		) ) );
 	}
 
 	// ── DELETE PATTERN ─────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/delete-pattern' ) ) {
-		wp_register_ability( 'wpmcpui/delete-pattern', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/delete-pattern' ) ) {
+		wp_register_ability( 'lsxmcpui/delete-pattern', array_merge( $base, array(
 			'label'       => 'Delete Pattern',
 			'description' => 'Deletes a pattern PHP file from the active theme\'s patterns/ directory.',
 			'input_schema' => array(
@@ -1085,24 +1085,24 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'edit_theme_options' ); },
-			'execute_callback'   => 'wpmcpui_execute_delete_pattern',
+			'execute_callback'   => 'lsxmcpui_execute_delete_pattern',
 		) ) );
 	}
 
 	// ── TOUR OPERATOR CONTEXT ──────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-tour-operator-context' ) ) {
-		wp_register_ability( 'wpmcpui/get-tour-operator-context', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-tour-operator-context' ) ) {
+		wp_register_ability( 'lsxmcpui/get-tour-operator-context', array_merge( $base, array(
 			'label'       => 'Get Tour Operator Context',
 			'description' => 'Returns full developer context for Tour Operator sites: CPT slugs, meta keys, taxonomies, modal system, CSS classes, and Wetu field mappings.',
 			'input_schema' => array( 'type' => 'object', 'properties' => array() ),
 			'permission_callback' => function () { return current_user_can( 'edit_posts' ); },
-			'execute_callback'   => 'wpmcpui_execute_get_tour_operator_context',
+			'execute_callback'   => 'lsxmcpui_execute_get_tour_operator_context',
 		) ) );
 	}
 
 	// ── CREATE CPT ITEM ────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/create-cpt-item' ) ) {
-		wp_register_ability( 'wpmcpui/create-cpt-item', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/create-cpt-item' ) ) {
+		wp_register_ability( 'lsxmcpui/create-cpt-item', array_merge( $base, array(
 			'label'       => 'Create CPT Item',
 			'description' => 'Creates an item of any registered public post type with optional meta fields, taxonomy terms, and featured image.',
 			'input_schema' => array(
@@ -1121,13 +1121,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'edit_posts' ); },
-			'execute_callback'   => 'wpmcpui_execute_create_cpt_item',
+			'execute_callback'   => 'lsxmcpui_execute_create_cpt_item',
 		) ) );
 	}
 
 	// ── UPDATE CPT ITEM ────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/update-cpt-item' ) ) {
-		wp_register_ability( 'wpmcpui/update-cpt-item', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/update-cpt-item' ) ) {
+		wp_register_ability( 'lsxmcpui/update-cpt-item', array_merge( $base, array(
 			'label'       => 'Update CPT Item',
 			'description' => 'Updates an existing CPT item by ID.',
 			'input_schema' => array(
@@ -1146,13 +1146,13 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'edit_posts' ); },
-			'execute_callback'   => 'wpmcpui_execute_update_cpt_item',
+			'execute_callback'   => 'lsxmcpui_execute_update_cpt_item',
 		) ) );
 	}
 
 	// ── DELETE CPT ITEM ────────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/delete-cpt-item' ) ) {
-		wp_register_ability( 'wpmcpui/delete-cpt-item', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/delete-cpt-item' ) ) {
+		wp_register_ability( 'lsxmcpui/delete-cpt-item', array_merge( $base, array(
 			'label'       => 'Delete CPT Item',
 			'description' => 'Moves a CPT item to trash by ID.',
 			'input_schema' => array(
@@ -1163,18 +1163,18 @@ function wpmcpui_register_all_abilities() {
 				),
 			),
 			'permission_callback' => function () { return current_user_can( 'edit_posts' ); },
-			'execute_callback'   => 'wpmcpui_execute_delete_cpt_item',
+			'execute_callback'   => 'lsxmcpui_execute_delete_cpt_item',
 		) ) );
 	}
 
 	// ── WOOCOMMERCE CONTEXT ────────────────────────────────────────────────────
-	if ( wpmcpui_is_enabled( 'wpmcpui/get-woocommerce-context' ) ) {
-		wp_register_ability( 'wpmcpui/get-woocommerce-context', array_merge( $base, array(
+	if ( lsxmcpui_is_enabled( 'lsxmcpui/get-woocommerce-context' ) ) {
+		wp_register_ability( 'lsxmcpui/get-woocommerce-context', array_merge( $base, array(
 			'label'       => 'Get WooCommerce Context',
 			'description' => 'Returns developer context for WooCommerce sites: CPTs, taxonomies, order statuses, pages, payment gateways, currency, and key meta keys.',
 			'input_schema' => array( 'type' => 'object', 'properties' => array() ),
 			'permission_callback' => function () { return current_user_can( 'edit_posts' ); },
-			'execute_callback'   => 'wpmcpui_execute_get_woocommerce_context',
+			'execute_callback'   => 'lsxmcpui_execute_get_woocommerce_context',
 		) ) );
 	}
 }
@@ -1183,7 +1183,7 @@ function wpmcpui_register_all_abilities() {
 // EXECUTE CALLBACKS
 // ─────────────────────────────────────────────────────────────────────────────
 
-function wpmcpui_execute_get_posts( $input ) {
+function lsxmcpui_execute_get_posts( $input ) {
 	$per_page = isset( $input['per_page'] ) ? intval( $input['per_page'] ) : 10;
 	$status   = isset( $input['status'] )   ? sanitize_text_field( $input['status'] ) : 'publish';
 	if ( $status === 'all' ) {
@@ -1207,7 +1207,7 @@ function wpmcpui_execute_get_posts( $input ) {
 	return array( 'posts' => $posts, 'total' => $q->found_posts );
 }
 
-function wpmcpui_execute_create_post( $input ) {
+function lsxmcpui_execute_create_post( $input ) {
 	$args = array(
 		'post_title'   => sanitize_text_field( $input['title'] ),
 		'post_content' => wp_kses_post( $input['content'] ),
@@ -1223,7 +1223,7 @@ function wpmcpui_execute_create_post( $input ) {
 	return array( 'success' => true, 'id' => $id, 'url' => get_permalink( $id ), 'status' => $args['post_status'] );
 }
 
-function wpmcpui_execute_update_post( $input ) {
+function lsxmcpui_execute_update_post( $input ) {
 	$args = array( 'ID' => intval( $input['id'] ) );
 	if ( isset( $input['title'] ) )      $args['post_title']    = sanitize_text_field( $input['title'] );
 	if ( isset( $input['content'] ) )    $args['post_content']  = wp_kses_post( $input['content'] );
@@ -1235,14 +1235,14 @@ function wpmcpui_execute_update_post( $input ) {
 	return array( 'success' => true, 'id' => $id, 'url' => get_permalink( $id ) );
 }
 
-function wpmcpui_execute_delete_post( $input ) {
+function lsxmcpui_execute_delete_post( $input ) {
 	$id = intval( $input['id'] );
 	return wp_trash_post( $id )
 		? array( 'success' => true, 'message' => "Post {$id} moved to trash." )
 		: array( 'success' => false, 'error' => 'Could not trash post.' );
 }
 
-function wpmcpui_execute_get_pages( $input ) {
+function lsxmcpui_execute_get_pages( $input ) {
 	$pages  = get_pages( array( 'post_status' => 'publish' ) );
 	$result = array();
 	foreach ( $pages as $page ) {
@@ -1257,7 +1257,7 @@ function wpmcpui_execute_get_pages( $input ) {
 	return array( 'pages' => $result );
 }
 
-function wpmcpui_execute_create_page( $input ) {
+function lsxmcpui_execute_create_page( $input ) {
 	$args = array(
 		'post_title'   => sanitize_text_field( $input['title'] ),
 		'post_content' => wp_kses_post( $input['content'] ),
@@ -1271,7 +1271,7 @@ function wpmcpui_execute_create_page( $input ) {
 	return array( 'success' => true, 'id' => $id, 'url' => get_permalink( $id ) );
 }
 
-function wpmcpui_execute_update_page( $input ) {
+function lsxmcpui_execute_update_page( $input ) {
 	$args = array( 'ID' => intval( $input['id'] ), 'post_type' => 'page' );
 	if ( isset( $input['title'] ) )   $args['post_title']   = sanitize_text_field( $input['title'] );
 	if ( isset( $input['content'] ) ) $args['post_content'] = wp_kses_post( $input['content'] );
@@ -1281,14 +1281,14 @@ function wpmcpui_execute_update_page( $input ) {
 	return array( 'success' => true, 'id' => $id, 'url' => get_permalink( $id ) );
 }
 
-function wpmcpui_execute_delete_page( $input ) {
+function lsxmcpui_execute_delete_page( $input ) {
 	$id = intval( $input['id'] );
 	return wp_trash_post( $id )
 		? array( 'success' => true, 'message' => "Page {$id} moved to trash." )
 		: array( 'success' => false, 'error' => 'Could not trash page.' );
 }
 
-function wpmcpui_execute_get_post_types( $input ) {
+function lsxmcpui_execute_get_post_types( $input ) {
 	$include_builtin = isset( $input['include_builtin'] ) ? (bool) $input['include_builtin'] : true;
 	$post_types      = get_post_types( array( 'public' => true ), 'objects' );
 	$result          = array();
@@ -1310,7 +1310,7 @@ function wpmcpui_execute_get_post_types( $input ) {
 	return array( 'post_types' => $result, 'total' => count( $result ) );
 }
 
-function wpmcpui_execute_get_cpt_items( $input ) {
+function lsxmcpui_execute_get_cpt_items( $input ) {
 	$post_type = sanitize_key( $input['post_type'] );
 	if ( ! post_type_exists( $post_type ) ) {
 		return array( 'success' => false, 'error' => "Post type '{$post_type}' is not registered." );
@@ -1358,7 +1358,7 @@ function wpmcpui_execute_get_cpt_items( $input ) {
 	return array( 'items' => $result, 'total' => $q->found_posts, 'post_type' => $post_type );
 }
 
-function wpmcpui_execute_get_categories( $input ) {
+function lsxmcpui_execute_get_categories( $input ) {
 	$cats   = get_categories( array( 'hide_empty' => false ) );
 	$result = array();
 	foreach ( $cats as $c ) {
@@ -1367,7 +1367,7 @@ function wpmcpui_execute_get_categories( $input ) {
 	return array( 'categories' => $result );
 }
 
-function wpmcpui_execute_create_category( $input ) {
+function lsxmcpui_execute_create_category( $input ) {
 	$args = array();
 	if ( ! empty( $input['description'] ) ) $args['description'] = sanitize_text_field( $input['description'] );
 	if ( ! empty( $input['parent'] ) )      $args['parent']      = intval( $input['parent'] );
@@ -1376,7 +1376,7 @@ function wpmcpui_execute_create_category( $input ) {
 	return array( 'success' => true, 'id' => $result['term_id'], 'name' => $input['name'] );
 }
 
-function wpmcpui_execute_get_tags( $input ) {
+function lsxmcpui_execute_get_tags( $input ) {
 	$tags   = get_tags( array( 'hide_empty' => false ) );
 	$result = array();
 	foreach ( $tags as $t ) {
@@ -1385,14 +1385,14 @@ function wpmcpui_execute_get_tags( $input ) {
 	return array( 'tags' => $result );
 }
 
-function wpmcpui_execute_create_tag( $input ) {
+function lsxmcpui_execute_create_tag( $input ) {
 	$args   = ! empty( $input['description'] ) ? array( 'description' => sanitize_text_field( $input['description'] ) ) : array();
 	$result = wp_insert_term( sanitize_text_field( $input['name'] ), 'post_tag', $args );
 	if ( is_wp_error( $result ) ) return array( 'success' => false, 'error' => $result->get_error_message() );
 	return array( 'success' => true, 'id' => $result['term_id'], 'name' => $input['name'] );
 }
 
-function wpmcpui_execute_get_comments( $input ) {
+function lsxmcpui_execute_get_comments( $input ) {
 	$per_page = isset( $input['per_page'] ) ? intval( $input['per_page'] ) : 20;
 	$status   = isset( $input['status'] )   ? sanitize_text_field( $input['status'] ) : '';
 	$args     = array( 'number' => $per_page );
@@ -1413,19 +1413,19 @@ function wpmcpui_execute_get_comments( $input ) {
 	return array( 'comments' => $result, 'total' => count( $result ) );
 }
 
-function wpmcpui_execute_approve_comment( $input ) {
+function lsxmcpui_execute_approve_comment( $input ) {
 	return wp_set_comment_status( intval( $input['id'] ), 'approve' )
 		? array( 'success' => true, 'message' => 'Comment approved.' )
 		: array( 'success' => false, 'error' => 'Failed to approve.' );
 }
 
-function wpmcpui_execute_delete_comment( $input ) {
+function lsxmcpui_execute_delete_comment( $input ) {
 	return wp_trash_comment( intval( $input['id'] ) )
 		? array( 'success' => true, 'message' => 'Comment trashed.' )
 		: array( 'success' => false, 'error' => 'Failed to trash comment.' );
 }
 
-function wpmcpui_execute_get_media( $input ) {
+function lsxmcpui_execute_get_media( $input ) {
 	$per_page = isset( $input['per_page'] ) ? intval( $input['per_page'] ) : 20;
 	$args     = array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'posts_per_page' => $per_page );
 	if ( ! empty( $input['type'] ) ) $args['post_mime_type'] = sanitize_text_field( $input['type'] );
@@ -1443,7 +1443,7 @@ function wpmcpui_execute_get_media( $input ) {
 	return array( 'media' => $result, 'total' => $q->found_posts );
 }
 
-function wpmcpui_execute_get_users( $input ) {
+function lsxmcpui_execute_get_users( $input ) {
 	$users  = get_users();
 	$result = array();
 	foreach ( $users as $u ) {
@@ -1458,7 +1458,7 @@ function wpmcpui_execute_get_users( $input ) {
 	return array( 'users' => $result );
 }
 
-function wpmcpui_execute_search( $input ) {
+function lsxmcpui_execute_search( $input ) {
 	$keyword   = isset( $input['query'] )     ? sanitize_text_field( $input['query'] ) : '';
 	$post_type = isset( $input['post_type'] ) ? sanitize_key( $input['post_type'] )    : 'any';
 	$per_page  = isset( $input['per_page'] )  ? intval( $input['per_page'] )           : 10;
@@ -1470,7 +1470,7 @@ function wpmcpui_execute_search( $input ) {
 	return array( 'results' => $results, 'total' => $q->found_posts );
 }
 
-function wpmcpui_execute_get_site_info( $input ) {
+function lsxmcpui_execute_get_site_info( $input ) {
 	return array(
 		'name'        => get_bloginfo( 'name' ),
 		'url'         => get_site_url(),
@@ -1481,7 +1481,7 @@ function wpmcpui_execute_get_site_info( $input ) {
 	);
 }
 
-function wpmcpui_execute_get_plugins( $input ) {
+function lsxmcpui_execute_get_plugins( $input ) {
 	if ( ! function_exists( 'get_plugins' ) ) {
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 	}
@@ -1501,7 +1501,7 @@ function wpmcpui_execute_get_plugins( $input ) {
 	return array( 'active_plugins' => $result, 'total' => count( $result ) );
 }
 
-function wpmcpui_execute_get_patterns( $input ) {
+function lsxmcpui_execute_get_patterns( $input ) {
 	$source   = isset( $input['source'] ) ? sanitize_text_field( $input['source'] ) : 'all';
 	$registry = WP_Block_Patterns_Registry::get_instance();
 	$all      = $registry->get_all_registered();
@@ -1528,7 +1528,7 @@ function wpmcpui_execute_get_patterns( $input ) {
 	return array( 'patterns' => $result, 'total' => count( $result ) );
 }
 
-function wpmcpui_execute_create_pattern( $input ) {
+function lsxmcpui_execute_create_pattern( $input ) {
 	$filename = isset( $input['filename'] ) ? sanitize_file_name( $input['filename'] ) : '';
 	if ( ! $filename || pathinfo( $filename, PATHINFO_EXTENSION ) !== 'php' ) {
 		return array( 'success' => false, 'error' => 'filename must be a .php file with no path separators.' );
@@ -1571,7 +1571,7 @@ function wpmcpui_execute_create_pattern( $input ) {
 	return array( 'success' => true, 'filename' => $filename, 'path' => $file_path, 'bytes' => $written );
 }
 
-function wpmcpui_execute_update_pattern( $input ) {
+function lsxmcpui_execute_update_pattern( $input ) {
 	$filename = isset( $input['filename'] ) ? sanitize_file_name( $input['filename'] ) : '';
 	if ( ! $filename || pathinfo( $filename, PATHINFO_EXTENSION ) !== 'php' ) {
 		return array( 'success' => false, 'error' => 'filename must be a .php file with no path separators.' );
@@ -1589,7 +1589,7 @@ function wpmcpui_execute_update_pattern( $input ) {
 	return array( 'success' => true, 'filename' => $filename, 'path' => $file_path, 'bytes' => $written );
 }
 
-function wpmcpui_execute_delete_pattern( $input ) {
+function lsxmcpui_execute_delete_pattern( $input ) {
 	$filename = isset( $input['filename'] ) ? sanitize_file_name( $input['filename'] ) : '';
 	if ( ! $filename || pathinfo( $filename, PATHINFO_EXTENSION ) !== 'php' ) {
 		return array( 'success' => false, 'error' => 'filename must be a .php file with no path separators.' );
@@ -1606,7 +1606,7 @@ function wpmcpui_execute_delete_pattern( $input ) {
 	return array( 'success' => true, 'filename' => $filename, 'message' => "Pattern '{$filename}' deleted." );
 }
 
-function wpmcpui_execute_get_tour_operator_context( $input ) {
+function lsxmcpui_execute_get_tour_operator_context( $input ) {
 	return array(
 		'plugin' => array(
 			'name'    => 'LSX Tour Operator',
@@ -1916,7 +1916,7 @@ function wpmcpui_execute_get_tour_operator_context( $input ) {
 	);
 }
 
-function wpmcpui_execute_get_woocommerce_context( $input ) {
+function lsxmcpui_execute_get_woocommerce_context( $input ) {
 	if ( ! class_exists( 'WooCommerce' ) ) {
 		return array( 'success' => false, 'error' => 'WooCommerce is not active on this site.' );
 	}
@@ -2083,7 +2083,7 @@ function wpmcpui_execute_get_woocommerce_context( $input ) {
 	);
 }
 
-function wpmcpui_execute_create_cpt_item( $input ) {
+function lsxmcpui_execute_create_cpt_item( $input ) {
 	$post_type = isset( $input['post_type'] ) ? sanitize_key( $input['post_type'] ) : '';
 	if ( ! $post_type || ! post_type_exists( $post_type ) ) {
 		return array( 'success' => false, 'error' => "Post type '{$post_type}' is not registered." );
@@ -2126,7 +2126,7 @@ function wpmcpui_execute_create_cpt_item( $input ) {
 	);
 }
 
-function wpmcpui_execute_update_cpt_item( $input ) {
+function lsxmcpui_execute_update_cpt_item( $input ) {
 	$post_id = isset( $input['id'] ) ? intval( $input['id'] ) : 0;
 	if ( ! $post_id || ! get_post( $post_id ) ) {
 		return array( 'success' => false, 'error' => "Post ID {$post_id} not found." );
@@ -2161,7 +2161,7 @@ function wpmcpui_execute_update_cpt_item( $input ) {
 	return array( 'success' => true, 'id' => $post_id, 'url' => get_permalink( $post_id ) );
 }
 
-function wpmcpui_execute_delete_cpt_item( $input ) {
+function lsxmcpui_execute_delete_cpt_item( $input ) {
 	$post_id = isset( $input['id'] ) ? intval( $input['id'] ) : 0;
 	if ( ! $post_id || ! get_post( $post_id ) ) {
 		return array( 'success' => false, 'error' => "Post ID {$post_id} not found." );

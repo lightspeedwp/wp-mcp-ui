@@ -84,7 +84,7 @@ Does not fully parse large theme.json files — reads the first 64 KB only.
 1. Create a new class file in `includes/abilities/class-your-ability.php` following the pattern of the existing ability classes.
 2. Register it via `wp_register_ability()` with `meta.mcp.public = false` and a permission callback that requires authentication and the appropriate capability.
 3. Add the ability slug to `LSX_MCP_UI_Custom_Server::TOOLS` constant.
-4. Include the class file in `wp-mcp-ui.php`.
+4. Include the class file in `lsx-mcp-ui.php`.
 5. Call `YourAbilityClass::register()` from `LSX_MCP_UI_Plugin::register_lightspeed_abilities()`.
 
 ## How to add a future write ability safely

@@ -1,8 +1,8 @@
-# WP MCP UI — LightSpeed MCP Setup & Testing Plugin
+# LSX MCP UI — LightSpeed MCP Setup & Ability Manager
 
 A WordPress plugin that does two things:
 
-1. **Ability management** — toggle WordPress MCP abilities (read/write per content type) from the admin UI.
+1. **Ability management** — toggle WordPress MCP abilities (read/write per content type) from the admin UI at **Tools → MCP Abilities**.
 2. **LightSpeed MCP layer** — configuration helper, Application Password compatibility, and a read-only custom MCP testing server for LightSpeed development sites.
 
 ---
@@ -104,6 +104,102 @@ Constants take precedence over admin settings. Use them to lock configuration ac
 
 ---
 
+## Abilities Reference
+
+All abilities are toggled individually at **Tools → MCP Abilities**. Read abilities are on by default; write abilities are off by default and show a confirmation modal when first enabled.
+
+### Posts
+
+| Ability | Access | Description |
+|---|---|---|
+| `lsxmcpui/get-posts` | Read | Blog posts with title, URL, date, excerpt, categories, tags |
+| `lsxmcpui/create-post` | Write | Create a new blog post |
+| `lsxmcpui/update-post` | Write | Update an existing post by ID |
+| `lsxmcpui/delete-post` | Write | Move a post to trash |
+
+### Pages
+
+| Ability | Access | Description |
+|---|---|---|
+| `lsxmcpui/get-pages` | Read | Published pages with title, URL, parent, status |
+| `lsxmcpui/create-page` | Write | Create a new page |
+| `lsxmcpui/update-page` | Write | Update a page by ID |
+| `lsxmcpui/delete-page` | Write | Move a page to trash |
+
+### Custom Post Types
+
+| Ability | Access | Description |
+|---|---|---|
+| `lsxmcpui/get-post-types` | Read | All registered public post types with labels and REST base |
+| `lsxmcpui/get-cpt-items` | Read | Query any post type by slug; includes ACF fields when active |
+| `lsxmcpui/create-cpt-item` | Write | Create an item of any registered CPT with meta fields, taxonomy terms, and featured image |
+| `lsxmcpui/update-cpt-item` | Write | Update an existing CPT item by ID |
+| `lsxmcpui/delete-cpt-item` | Write | Move a CPT item to trash |
+
+#### `lsxmcpui/create-cpt-item` and `lsxmcpui/update-cpt-item` parameters
+
+| Parameter | Type | Description |
+|---|---|---|
+| `post_type` | string | Registered post type slug, e.g. `tour`, `destination`, `accommodation` |
+| `title` | string | Post title |
+| `content` | string | Post content (HTML) |
+| `excerpt` | string | Post excerpt |
+| `status` | string | `publish`, `draft`, or `pending`. Default `draft` |
+| `slug` | string | URL slug |
+| `featured_image_id` | integer | Attachment ID for the featured image |
+| `meta` | object | Key-value pairs of post meta. Array values are automatically PHP-serialized (correct for Tour Operator fields like `gallery`, `itinerary`, `units`, etc.) |
+| `taxonomy_terms` | object | Taxonomy assignments: keys are taxonomy slugs (e.g. `travel-style`), values are arrays of term IDs |
+
+### Taxonomy
+
+| Ability | Access | Description |
+|---|---|---|
+| `lsxmcpui/get-categories` | Read | Post categories with IDs, slugs, post counts |
+| `lsxmcpui/create-category` | Write | Create a new category |
+| `lsxmcpui/get-tags` | Read | Post tags with IDs, slugs, post counts |
+| `lsxmcpui/create-tag` | Write | Create a new tag |
+
+### Patterns
+
+| Ability | Access | Description |
+|---|---|---|
+| `lsxmcpui/get-patterns` | Read | All registered block patterns with name, title, categories, content |
+| `lsxmcpui/create-pattern` | Write | Write a new PHP pattern file to the active theme's `patterns/` directory |
+| `lsxmcpui/update-pattern` | Write | Overwrite an existing pattern file in the active theme |
+| `lsxmcpui/delete-pattern` | Write | Delete a pattern PHP file from the active theme |
+
+**Notes on `lsxmcpui/create-pattern`:**
+- The `slug` field must use the active theme's stylesheet slug as its prefix, e.g. `my-theme/hero-banner`. Call `lsxmcpui/get-site-info` first if unsure of the theme slug — the ability will auto-correct a wrong prefix but the correct value is always safer.
+- The generated file includes a closing `?>` tag so that block HTML content following the PHP header comment is valid.
+
+### Comments
+
+| Ability | Access | Description |
+|---|---|---|
+| `lsxmcpui/get-comments` | Read | Comments with author, status, content snippet |
+| `lsxmcpui/approve-comment` | Write | Approve a pending comment |
+| `lsxmcpui/delete-comment` | Write | Move a comment to trash |
+
+### Media, Users, Search, Site
+
+| Ability | Access | Description |
+|---|---|---|
+| `lsxmcpui/get-media` | Read | Media library items with title, URL, MIME type |
+| `lsxmcpui/get-users` | Read | Users with display name, email, role |
+| `lsxmcpui/search` | Read | Full-text search across all post types |
+| `lsxmcpui/get-site-info` | Read | Site name, URL, tagline, WP version, active theme slug, language |
+| `lsxmcpui/get-plugins` | Read | Active plugins with name, version, author |
+
+### Tour Operator
+
+| Ability | Access | Description |
+|---|---|---|
+| `lsxmcpui/get-tour-operator-context` | Read | Full developer context: CPT slugs, all CMB2 meta keys, taxonomy slugs, modal system, CSS classes, Wetu importer field mappings |
+
+Use `lsxmcpui/create-cpt-item` / `lsxmcpui/update-cpt-item` / `lsxmcpui/delete-cpt-item` to manage `tour`, `destination`, and `accommodation` posts. Always call `lsxmcpui/get-tour-operator-context` first to confirm meta key names and taxonomy slugs.
+
+---
+
 ## Custom MCP Server
 
 The plugin registers a custom `lightspeed-testing-mcp-server` that exposes read-only diagnostic abilities:
@@ -133,7 +229,7 @@ After activating the plugin, go to **Tools → LightSpeed MCP** for:
 - Security checklist.
 - Troubleshooting guide.
 
-The abilities management UI (toggle read/write per content type) is at **Tools → MCP Abilities**.
+The abilities management UI is at **Tools → MCP Abilities**.
 
 ---
 
@@ -150,6 +246,9 @@ Regenerate the Application Password (it is shown once). Ensure the user has `man
 
 **REST 404**
 Flush permalinks at **Settings → Permalinks**. Confirm MCP Adapter is active.
+
+**Ability settings reset after rename**
+The database option was renamed from `wpmcpui_abilities` to `lsxmcpui_abilities` as part of the rebrand to `lsx-mcp-ui`. Re-enable any abilities that were previously active at **Tools → MCP Abilities**.
 
 → Full troubleshooting at **Tools → LightSpeed MCP → Troubleshooting** or in [docs/setup-development-site.md](docs/setup-development-site.md).
 
