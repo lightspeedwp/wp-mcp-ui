@@ -685,6 +685,34 @@ class LSX_MCP_UI_Admin_Page {
 			self::code_block( $mc, '.mcp.json' );
 			?>
 
+			<h3 id="doc-claude-code-devsite">Claude Code — Dev Site HTTP setup</h3>
+			<p>For a shared development site (e.g. <code><?php echo esc_html( $dev_suffix ); ?></code>), use the <code>mcp-remote</code> npm package as a stdio-to-HTTP bridge. It correctly implements the Streamable HTTP transport required by MCP Adapter v0.5.0+ and handles <code>Mcp-Session-Id</code> session management automatically.</p>
+
+			<p>Add the following entry to your <code>.mcp.json</code> alongside (or instead of) the local STDIO entries:</p>
+			<?php
+			$dev_http = json_encode( array(
+				'mcpServers' => array(
+					'wordpress-dev-testing' => array(
+						'command' => 'npx',
+						'args'    => array(
+							'mcp-remote',
+							'https://your-site.lightspeedwp.dev/wp-json/lightspeed-testing-mcp-server/mcp',
+							'--header',
+							'Authorization:Basic BASE64_OF_USERNAME_COLON_PASSWORD',
+						),
+					),
+				),
+			), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
+			self::code_block( $dev_http, '.mcp.json' );
+			?>
+
+			<p>Generate the Base64 value with:</p>
+			<?php self::code_block( 'echo -n "username:application-password" | base64', 'Terminal' ); ?>
+
+			<div class="notice notice-info inline">
+				<p><strong>Why <code>mcp-remote</code>?</strong> MCP Adapter v0.5.0+ uses the Streamable HTTP transport (protocol <code>2025-06-18</code>) which requires per-session <code>Mcp-Session-Id</code> headers. The <code>mcp-remote</code> package (official Anthropic stdio bridge) handles this correctly. Claude Code's native <code>"type": "http"</code> config does not currently support this transport. Do not use <code>@automattic/mcp-wordpress-remote</code> — it uses the old pre-session transport and returns an empty tool list.</p>
+			</div>
+
 			<h4>3. Enable MCP on the local site</h4>
 			<p>MCP must be enabled before the servers are registered. Either:</p>
 			<ul class="lsx-mcp-list">
@@ -924,6 +952,9 @@ class LSX_MCP_UI_Admin_Page {
 
 				<dt>The <code>.mcp.json</code> config I wrote only had one entry</dt>
 				<dd>Add a second entry for the LightSpeed testing server alongside the first. Both entries use the same <code>wp</code> command and <code>--path</code> — they only differ in the <code>--server</code> value and the JSON key name (which becomes the server's display name in Claude Code). See the config example above.</dd>
+
+				<dt><code>@automattic/mcp-wordpress-remote</code> or native <code>"type": "http"</code> returns no tools for dev sites</dt>
+				<dd>MCP Adapter v0.5.0+ uses the Streamable HTTP transport (protocol <code>2025-06-18</code>) which requires per-session <code>Mcp-Session-Id</code> headers. The <code>@automattic/mcp-wordpress-remote</code> npm package uses the older pre-session transport and is incompatible. Claude Code's native <code>"type": "http"</code> config also does not support this transport yet. Use <code>mcp-remote</code> (the official Anthropic stdio bridge) instead — it handles session management correctly. See the <a href="#doc-claude-code-devsite">dev site config example above</a>.</dd>
 			</dl>
 		</div>
 
