@@ -135,17 +135,12 @@ class LSX_MCP_UI_Config_Generator {
 	 * @return string JSON snippet
 	 */
 	public static function vscode_http( $server_key, $api_url, $username, $password = 'xxxx xxxx xxxx xxxx xxxx xxxx' ) {
+		$auth   = self::http_auth_header( $username, $password );
 		$config = array(
 			'servers' => array(
 				$server_key => array(
 					'command' => 'npx',
-					'args'    => array( '-y', '@automattic/mcp-wordpress-remote@latest' ),
-					'env'     => array(
-						'WP_API_URL'      => $api_url,
-						'WP_API_USERNAME' => $username,
-						'WP_API_PASSWORD' => $password,
-						'OAUTH_ENABLED'   => 'false',
-					),
+					'args'    => array( 'mcp-remote', $api_url, '--header', 'Authorization:Basic ' . $auth ),
 				),
 			),
 		);
@@ -154,23 +149,32 @@ class LSX_MCP_UI_Config_Generator {
 
 	/**
 	 * Returns the Claude Code / Claude Desktop HTTP config for a development site.
+	 * Uses mcp-remote (Streamable HTTP transport, compatible with MCP Adapter v0.5.0+).
 	 */
 	public static function claude_http( $server_key, $api_url, $username, $password = 'xxxx xxxx xxxx xxxx xxxx xxxx' ) {
+		$auth   = self::http_auth_header( $username, $password );
 		$config = array(
 			'mcpServers' => array(
 				$server_key => array(
 					'command' => 'npx',
-					'args'    => array( '-y', '@automattic/mcp-wordpress-remote@latest' ),
-					'env'     => array(
-						'WP_API_URL'      => $api_url,
-						'WP_API_USERNAME' => $username,
-						'WP_API_PASSWORD' => $password,
-						'OAUTH_ENABLED'   => 'false',
-					),
+					'args'    => array( 'mcp-remote', $api_url, '--header', 'Authorization:Basic ' . $auth ),
 				),
 			),
 		);
 		return wp_json_encode( $config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
+	}
+
+	/**
+	 * Returns the base64 credentials string for mcp-remote --header auth.
+	 * When the password is the placeholder value, returns a descriptive placeholder
+	 * string instead of encoding it.
+	 */
+	private static function http_auth_header( $username, $password ) {
+		if ( 'xxxx xxxx xxxx xxxx xxxx xxxx' === $password ) {
+			$slug = strtoupper( preg_replace( '/[^a-z0-9]/i', '_', $username ) );
+			return 'BASE64_' . $slug . '_COLON_APP_PASSWORD';
+		}
+		return base64_encode( $username . ':' . $password );
 	}
 
 	// ── wp-config.php constants block ─────────────────────────────────────────

@@ -210,11 +210,23 @@ class LSX_MCP_UI_Admin_Page {
 						</tr>
 						<tr>
 							<td>App Password compatibility</td>
-							<td><?php echo self::badge( $app_pass ); ?></td>
+							<td>
+								<?php
+								if ( $app_pass ) {
+									echo '<span class="lsx-mcp-badge-ok">Yes</span>';
+								} elseif ( 'local' === $op_env && ! $app_en ) {
+									echo '<span class="lsx-mcp-badge-na">N/A</span>';
+								} else {
+									echo self::badge( $app_pass );
+								}
+								?>
+							</td>
 							<td>
 								<?php
 								if ( $app_pass ) {
 									echo 'Enabled — Application Passwords are available for HTTP transport';
+								} elseif ( 'local' === $op_env && ! $app_en ) {
+									echo 'Not required for local STDIO transport. Only needed when connecting via HTTP from a <a href="' . esc_url( admin_url( 'tools.php?page=lsx-mcp&tab=devsite' ) ) . '">dev site</a>.';
 								} elseif ( 'blocked' === $op_env ) {
 									echo 'Blocked: not an allowed host/environment';
 								} elseif ( ! $mcp_on ) {
@@ -394,7 +406,7 @@ class LSX_MCP_UI_Admin_Page {
 				); ?>
 
 				<h3>Claude Code — Default Server</h3>
-				<p>Add to <code>.mcp.json</code> at project root, or <code>~/.claude/claude_desktop_config.json</code>:</p>
+				<p>Create <code>.mcp.json</code> at the project root (not inside <code>.claude/</code>):</p>
 				<?php self::code_block(
 					LSX_MCP_UI_Config_Generator::claude_stdio_default( $studio_path, 'admin' ),
 					'.mcp.json'
@@ -418,54 +430,48 @@ class LSX_MCP_UI_Admin_Page {
 			<?php /* ──────────────────── DEV SITE ──────────────────── */ ?>
 			<div id="lsx-mcp-tab-devsite" class="lsx-mcp-panel<?php echo 'devsite' === $active_tab ? ' active' : ''; ?>">
 				<h2>Development Site Setup (<code><?php echo esc_html( $dev_suffix ); ?></code>)</h2>
-				<p>Shared development sites use <strong>HTTP transport</strong> via <code>@automattic/mcp-wordpress-remote</code>. You need an Application Password for the MCP user.</p>
+				<p>Shared development sites use <strong>HTTP transport</strong> via <code>mcp-remote</code> — an npm stdio-to-HTTP bridge that handles the Streamable HTTP session protocol required by MCP Adapter v0.5.0+. You need Node.js and an Application Password for the MCP user.</p>
 
 				<?php if ( $is_ls_domain ) : ?>
 				<div class="notice notice-success inline">
-					<p><strong>This site is a LightSpeed dev domain.</strong> Enable MCP and Application Password compatibility in <a href="<?php echo esc_url( admin_url( 'tools.php?page=lsx-mcp&tab=settings' ) ); ?>">Settings</a>, then create an Application Password below. No wp-config.php editing required.</p>
+					<p><strong>This site is a LightSpeed dev domain.</strong> Enable MCP and Application Password compatibility in <a href="<?php echo esc_url( admin_url( 'tools.php?page=lsx-mcp&tab=settings' ) ); ?>">Settings</a>, then follow the steps below. No <code>wp-config.php</code> editing required.</p>
 				</div>
 				<?php endif; ?>
 
 				<div class="notice notice-warning inline">
-					<p><strong>Cloudflare Access:</strong> If this dev site is behind Cloudflare Access, MCP clients must include <code>CF-Access-Client-Id</code> and <code>CF-Access-Client-Secret</code> headers in every request. The <code>@automattic/mcp-wordpress-remote</code> package does not natively support Cloudflare Access — you will need a proxy layer or a patched wrapper config. Ensure the MCP endpoint URL is not gated by a Cloudflare Access policy, or create a service token bypass rule for your MCP client IP.</p>
+					<p><strong>Cloudflare Access:</strong> If this dev site is behind Cloudflare Access, MCP clients must include <code>CF-Access-Client-Id</code> and <code>CF-Access-Client-Secret</code> headers in every request. <code>mcp-remote</code> does not natively support Cloudflare Access headers — ensure the MCP endpoint is not gated by a Cloudflare Access policy, or create a service token bypass rule for your MCP client IP.</p>
 				</div>
 
 				<h3>Requirements</h3>
 				<ul class="lsx-mcp-list">
 					<li>Site URL ending in <code><?php echo esc_html( $dev_suffix ); ?></code></li>
 					<li>HTTPS working on the dev site</li>
-					<li>WordPress MCP Adapter plugin active</li>
-					<li>This plugin active with MCP enabled</li>
-					<li>Node.js available locally (<code>node --version</code>)</li>
-					<li>A dedicated <code><?php echo esc_html( $dedicated ); ?></code> user (recommended) or admin</li>
-					<li>An Application Password created for that user</li>
+					<li>WordPress MCP Adapter plugin active on the dev site</li>
+					<li>This plugin active with MCP enabled — set in <a href="<?php echo esc_url( admin_url( 'tools.php?page=lsx-mcp&tab=settings' ) ); ?>">Settings</a> or via <code>define( 'LSX_MCP_ENABLED', true );</code></li>
+					<li>Application Password compatibility enabled — set in <a href="<?php echo esc_url( admin_url( 'tools.php?page=lsx-mcp&tab=settings' ) ); ?>">Settings</a> or via <code>define( 'LSX_MCP_ENABLE_APPLICATION_PASSWORDS', true );</code></li>
+					<li>Node.js available locally (<code>node --version</code> should work in the terminal)</li>
+					<li>A dedicated <a href="<?php echo esc_url( admin_url( 'users.php' ) ); ?>"><code><?php echo esc_html( $dedicated ); ?></code></a> user (recommended) or admin with an Application Password</li>
 				</ul>
 
-				<h3>Step 1 — Enable MCP on this site</h3>
-				<p>In <a href="<?php echo esc_url( admin_url( 'tools.php?page=lsx-mcp&tab=settings' ) ); ?>">Settings</a>, enable: <em>Enable MCP for this site</em> and <em>Application Password compatibility</em>. Or add to <code>wp-config.php</code>:</p>
+				<h3>Step 1 — Enable MCP on the dev site</h3>
+				<p>In <a href="<?php echo esc_url( admin_url( 'tools.php?page=lsx-mcp&tab=settings' ) ); ?>">Settings</a>, enable <em>Enable MCP for this site</em> and <em>Application Password compatibility</em>. No <code>wp-config.php</code> changes needed on <code><?php echo esc_html( $dev_suffix ); ?></code> sites. If you prefer constants:</p>
 				<?php self::code_block( LSX_MCP_UI_Config_Generator::wp_config_constants(), 'wp-config.php' ); ?>
 
 				<h3>Step 2 — Create an Application Password</h3>
 				<ol class="lsx-mcp-list">
-					<li>Log in as <code><?php echo esc_html( $dedicated ); ?></code> (or admin if no dedicated user exists).</li>
+					<li>Log in as <a href="<?php echo esc_url( admin_url( 'users.php' ) ); ?>"><code><?php echo esc_html( $dedicated ); ?></code></a> (or admin if no dedicated user exists).</li>
 					<li>Go to <strong>Users &rarr; Profile</strong>, scroll to <strong>Application Passwords</strong>.</li>
 					<li>Enter a name (e.g. <code>Claude Code</code>) and click <strong>Add New Application Password</strong>.</li>
 					<li>Copy the password — it is shown <strong>only once</strong>.</li>
+					<li>Generate your Base64 auth token in your terminal:<br>
+						<?php self::code_block( 'echo -n "' . esc_html( $dedicated ) . ':your-app-password" | base64', 'Terminal' ); ?>
+					</li>
 				</ol>
 
 				<h3>Step 3 — Configure your MCP client</h3>
+				<p>Replace <code>site-name</code> with your dev site subdomain, and the <code>BASE64_&hellip;</code> placeholder with the value from Step 2. Both entries use the same credentials — they only differ in the server endpoint.</p>
 
-				<h4>VS Code — LightSpeed Testing Server</h4>
-				<?php self::code_block(
-					LSX_MCP_UI_Config_Generator::vscode_http(
-						'wordpress-dev-testing',
-						'https://site-name' . $dev_suffix . '/wp-json/lightspeed-testing-mcp-server/mcp',
-						$dedicated
-					),
-					'.vscode/mcp.json'
-				); ?>
-
-				<h4>Claude Code — LightSpeed Testing Server</h4>
+				<h4>Claude Code (<code>.mcp.json</code> — LightSpeed Testing Server)</h4>
 				<?php self::code_block(
 					LSX_MCP_UI_Config_Generator::claude_http(
 						'wordpress-dev-testing',
@@ -475,18 +481,33 @@ class LSX_MCP_UI_Admin_Page {
 					'.mcp.json'
 				); ?>
 
-				<h4>VS Code — Default Server</h4>
+				<h4>Claude Code (<code>.mcp.json</code> — Default Server)</h4>
 				<?php self::code_block(
-					LSX_MCP_UI_Config_Generator::vscode_http(
+					LSX_MCP_UI_Config_Generator::claude_http(
 						'wordpress-dev-default',
 						'https://site-name' . $dev_suffix . '/wp-json/mcp/mcp-adapter-default-server',
+						$dedicated
+					),
+					'.mcp.json'
+				); ?>
+
+				<h4>VS Code (<code>.vscode/mcp.json</code> — LightSpeed Testing Server)</h4>
+				<?php self::code_block(
+					LSX_MCP_UI_Config_Generator::vscode_http(
+						'wordpress-dev-testing',
+						'https://site-name' . $dev_suffix . '/wp-json/lightspeed-testing-mcp-server/mcp',
 						$dedicated
 					),
 					'.vscode/mcp.json'
 				); ?>
 
+				<h3>Step 4 — Restart your MCP client</h3>
+				<div class="notice notice-warning inline">
+					<p>Claude Code reads <code>.mcp.json</code> only at startup. After creating or editing the file, <strong>close and reopen</strong> the VS Code window for the server to connect.</p>
+				</div>
+
 				<div class="lsx-mcp-note">
-					<strong>Replace:</strong> <code>site-name</code> with your dev site subdomain, and <code>xxxx xxxx xxxx xxxx xxxx xxxx</code> with your Application Password. Do not commit the password to version control.
+					<strong>Why <code>mcp-remote</code>?</strong> MCP Adapter v0.5.0+ uses the Streamable HTTP transport (protocol <code>2025-06-18</code>) which requires per-session <code>Mcp-Session-Id</code> headers. <code>mcp-remote</code> handles this correctly. Claude Code's native <code>"type": "http"</code> config and the <code>@automattic/mcp-wordpress-remote</code> npm package both use the older transport and return an empty tool list.
 				</div>
 			</div>
 

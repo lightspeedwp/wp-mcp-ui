@@ -187,7 +187,11 @@ class LSX_MCP_UI_Environment {
 	 */
 	public static function get_current_host() {
 		if ( isset( $_SERVER['HTTP_HOST'] ) ) {
-			return sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) );
+			$host = sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) );
+			// HTTP_HOST includes the port for non-standard ports (e.g. localhost:8900).
+			// Strip it so host comparisons work correctly.
+			$host = preg_replace( '/:\d+$/', '', $host );
+			return $host;
 		}
 		return (string) parse_url( get_site_url(), PHP_URL_HOST );
 	}

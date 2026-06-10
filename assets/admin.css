@@ -93,6 +93,15 @@
 	padding: 2px 8px;
 	border-radius: 12px;
 }
+.lsx-mcp-badge-na {
+	display: inline-block;
+	background: #f0f0f1;
+	color: #787c82;
+	font-size: 11px;
+	font-weight: 700;
+	padding: 2px 8px;
+	border-radius: 12px;
+}
 
 /* Code blocks */
 .lsx-mcp-code-wrap {
@@ -149,7 +158,12 @@
 	font-size: 13.5px;
 	color: #3c434a;
 	line-height: 2;
+	list-style-type: disc;
 }
+.lsx-mcp-list ol,
+ol.lsx-mcp-list { list-style-type: decimal; }
+.lsx-mcp-list a { color: #2271b1; text-decoration: none; }
+.lsx-mcp-list a:hover { color: #135e96; text-decoration: underline; }
 .lsx-mcp-list code { background: #f0f0f1; padding: 1px 5px; border-radius: 3px; font-size: 12.5px; }
 
 /* Security checklist */
