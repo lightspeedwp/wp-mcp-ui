@@ -81,6 +81,9 @@ function wpmcpui_ability_registry() {
 		'wpmcpui/delete-pattern' => array( 'label' => 'Delete Pattern',  'description' => 'Delete a pattern PHP file from the active theme\'s patterns/ directory.',                            'group' => 'Patterns', 'access' => 'write', 'default' => false ),
 		// TOUR OPERATOR
 		'wpmcpui/get-tour-operator-context' => array( 'label' => 'Tour Operator Context', 'description' => 'Returns full developer context for Tour Operator sites: CPT slugs, all meta keys, taxonomy slugs, modal system details, CSS classes, and Wetu importer field mappings.', 'group' => 'Tour Operator', 'access' => 'read', 'default' => false ),
+		'wpmcpui/create-cpt-item' => array( 'label' => 'Create CPT Item', 'description' => 'Create an item of any registered custom post type with meta fields, taxonomy terms, and featured image.', 'group' => 'Post Types', 'access' => 'write', 'default' => false ),
+		'wpmcpui/update-cpt-item' => array( 'label' => 'Update CPT Item', 'description' => 'Update an existing CPT item by ID, including meta fields and taxonomy terms.', 'group' => 'Post Types', 'access' => 'write', 'default' => false ),
+		'wpmcpui/delete-cpt-item' => array( 'label' => 'Delete CPT Item', 'description' => 'Move a CPT item to trash by ID.', 'group' => 'Post Types', 'access' => 'write', 'default' => false ),
 		// WOOCOMMERCE
 		'wpmcpui/get-woocommerce-context' => array( 'label' => 'WooCommerce Context', 'description' => 'Returns developer context for WooCommerce sites: CPTs, taxonomies, order statuses, pages, payment gateways, currency, and key meta keys.', 'group' => 'WooCommerce', 'access' => 'read', 'default' => false ),
 	);
@@ -1097,6 +1100,73 @@ function wpmcpui_register_all_abilities() {
 		) ) );
 	}
 
+	// ── CREATE CPT ITEM ────────────────────────────────────────────────────────
+	if ( wpmcpui_is_enabled( 'wpmcpui/create-cpt-item' ) ) {
+		wp_register_ability( 'wpmcpui/create-cpt-item', array_merge( $base, array(
+			'label'       => 'Create CPT Item',
+			'description' => 'Creates an item of any registered public post type with optional meta fields, taxonomy terms, and featured image.',
+			'input_schema' => array(
+				'type'       => 'object',
+				'required'   => array( 'post_type', 'title' ),
+				'properties' => array(
+					'post_type'         => array( 'type' => 'string',  'description' => 'Registered post type slug, e.g. tour, destination, accommodation.' ),
+					'title'             => array( 'type' => 'string',  'description' => 'Post title.' ),
+					'content'           => array( 'type' => 'string',  'description' => 'Post content (HTML).' ),
+					'excerpt'           => array( 'type' => 'string',  'description' => 'Post excerpt.' ),
+					'status'            => array( 'type' => 'string',  'description' => 'publish | draft | pending. Default draft.' ),
+					'slug'              => array( 'type' => 'string',  'description' => 'URL slug.' ),
+					'featured_image_id' => array( 'type' => 'integer', 'description' => 'Attachment ID for the featured image.' ),
+					'meta'              => array( 'type' => 'object',  'description' => 'Key-value pairs of post meta. Array values are automatically PHP-serialized for Tour Operator fields like gallery, itinerary, units, accommodation_to_tour, etc.', 'additionalProperties' => true ),
+					'taxonomy_terms'    => array( 'type' => 'object',  'description' => 'Taxonomy term assignments. Keys are taxonomy slugs (e.g. travel-style, accommodation-type), values are arrays of term IDs.', 'additionalProperties' => array( 'type' => 'array', 'items' => array( 'type' => 'integer' ) ) ),
+				),
+			),
+			'permission_callback' => function () { return current_user_can( 'edit_posts' ); },
+			'execute_callback'   => 'wpmcpui_execute_create_cpt_item',
+		) ) );
+	}
+
+	// ── UPDATE CPT ITEM ────────────────────────────────────────────────────────
+	if ( wpmcpui_is_enabled( 'wpmcpui/update-cpt-item' ) ) {
+		wp_register_ability( 'wpmcpui/update-cpt-item', array_merge( $base, array(
+			'label'       => 'Update CPT Item',
+			'description' => 'Updates an existing CPT item by ID.',
+			'input_schema' => array(
+				'type'       => 'object',
+				'required'   => array( 'id' ),
+				'properties' => array(
+					'id'                => array( 'type' => 'integer', 'description' => 'Post ID to update.' ),
+					'title'             => array( 'type' => 'string',  'description' => 'New post title.' ),
+					'content'           => array( 'type' => 'string',  'description' => 'New post content (HTML).' ),
+					'excerpt'           => array( 'type' => 'string',  'description' => 'New post excerpt.' ),
+					'status'            => array( 'type' => 'string',  'description' => 'publish | draft | pending.' ),
+					'slug'              => array( 'type' => 'string',  'description' => 'New URL slug.' ),
+					'featured_image_id' => array( 'type' => 'integer', 'description' => 'Attachment ID for the featured image.' ),
+					'meta'              => array( 'type' => 'object',  'description' => 'Key-value pairs of post meta to update. Array values are PHP-serialized.', 'additionalProperties' => true ),
+					'taxonomy_terms'    => array( 'type' => 'object',  'description' => 'Taxonomy term assignments to update.', 'additionalProperties' => array( 'type' => 'array', 'items' => array( 'type' => 'integer' ) ) ),
+				),
+			),
+			'permission_callback' => function () { return current_user_can( 'edit_posts' ); },
+			'execute_callback'   => 'wpmcpui_execute_update_cpt_item',
+		) ) );
+	}
+
+	// ── DELETE CPT ITEM ────────────────────────────────────────────────────────
+	if ( wpmcpui_is_enabled( 'wpmcpui/delete-cpt-item' ) ) {
+		wp_register_ability( 'wpmcpui/delete-cpt-item', array_merge( $base, array(
+			'label'       => 'Delete CPT Item',
+			'description' => 'Moves a CPT item to trash by ID.',
+			'input_schema' => array(
+				'type'     => 'object',
+				'required' => array( 'id' ),
+				'properties' => array(
+					'id' => array( 'type' => 'integer', 'description' => 'Post ID to trash.' ),
+				),
+			),
+			'permission_callback' => function () { return current_user_can( 'edit_posts' ); },
+			'execute_callback'   => 'wpmcpui_execute_delete_cpt_item',
+		) ) );
+	}
+
 	// ── WOOCOMMERCE CONTEXT ────────────────────────────────────────────────────
 	if ( wpmcpui_is_enabled( 'wpmcpui/get-woocommerce-context' ) ) {
 		wp_register_ability( 'wpmcpui/get-woocommerce-context', array_merge( $base, array(
@@ -2011,4 +2081,94 @@ function wpmcpui_execute_get_woocommerce_context( $input ) {
 			),
 		),
 	);
+}
+
+function wpmcpui_execute_create_cpt_item( $input ) {
+	$post_type = isset( $input['post_type'] ) ? sanitize_key( $input['post_type'] ) : '';
+	if ( ! $post_type || ! post_type_exists( $post_type ) ) {
+		return array( 'success' => false, 'error' => "Post type '{$post_type}' is not registered." );
+	}
+	$args = array(
+		'post_type'    => $post_type,
+		'post_title'   => isset( $input['title'] )   ? sanitize_text_field( $input['title'] )   : '',
+		'post_content' => isset( $input['content'] ) ? wp_kses_post( $input['content'] )         : '',
+		'post_excerpt' => isset( $input['excerpt'] ) ? sanitize_text_field( $input['excerpt'] ) : '',
+		'post_status'  => isset( $input['status'] )  ? sanitize_key( $input['status'] )         : 'draft',
+		'post_name'    => isset( $input['slug'] )    ? sanitize_title( $input['slug'] )          : '',
+	);
+	$post_id = wp_insert_post( $args, true );
+	if ( is_wp_error( $post_id ) ) {
+		return array( 'success' => false, 'error' => $post_id->get_error_message() );
+	}
+	if ( ! empty( $input['featured_image_id'] ) ) {
+		set_post_thumbnail( $post_id, intval( $input['featured_image_id'] ) );
+	}
+	if ( ! empty( $input['meta'] ) && is_array( $input['meta'] ) ) {
+		foreach ( $input['meta'] as $key => $value ) {
+			$meta_key = sanitize_key( $key );
+			update_post_meta( $post_id, $meta_key, is_array( $value ) ? serialize( $value ) : $value );
+		}
+	}
+	if ( ! empty( $input['taxonomy_terms'] ) && is_array( $input['taxonomy_terms'] ) ) {
+		foreach ( $input['taxonomy_terms'] as $taxonomy => $term_ids ) {
+			$taxonomy = sanitize_key( $taxonomy );
+			if ( taxonomy_exists( $taxonomy ) ) {
+				wp_set_object_terms( $post_id, array_map( 'intval', (array) $term_ids ), $taxonomy );
+			}
+		}
+	}
+	return array(
+		'success'  => true,
+		'id'       => $post_id,
+		'url'      => get_permalink( $post_id ),
+		'status'   => get_post_status( $post_id ),
+		'edit_url' => get_edit_post_link( $post_id, 'raw' ),
+	);
+}
+
+function wpmcpui_execute_update_cpt_item( $input ) {
+	$post_id = isset( $input['id'] ) ? intval( $input['id'] ) : 0;
+	if ( ! $post_id || ! get_post( $post_id ) ) {
+		return array( 'success' => false, 'error' => "Post ID {$post_id} not found." );
+	}
+	$args = array( 'ID' => $post_id );
+	if ( isset( $input['title'] ) )   $args['post_title']   = sanitize_text_field( $input['title'] );
+	if ( isset( $input['content'] ) ) $args['post_content'] = wp_kses_post( $input['content'] );
+	if ( isset( $input['excerpt'] ) ) $args['post_excerpt'] = sanitize_text_field( $input['excerpt'] );
+	if ( isset( $input['status'] ) )  $args['post_status']  = sanitize_key( $input['status'] );
+	if ( isset( $input['slug'] ) )    $args['post_name']    = sanitize_title( $input['slug'] );
+	$result = wp_update_post( $args, true );
+	if ( is_wp_error( $result ) ) {
+		return array( 'success' => false, 'error' => $result->get_error_message() );
+	}
+	if ( ! empty( $input['featured_image_id'] ) ) {
+		set_post_thumbnail( $post_id, intval( $input['featured_image_id'] ) );
+	}
+	if ( ! empty( $input['meta'] ) && is_array( $input['meta'] ) ) {
+		foreach ( $input['meta'] as $key => $value ) {
+			$meta_key = sanitize_key( $key );
+			update_post_meta( $post_id, $meta_key, is_array( $value ) ? serialize( $value ) : $value );
+		}
+	}
+	if ( ! empty( $input['taxonomy_terms'] ) && is_array( $input['taxonomy_terms'] ) ) {
+		foreach ( $input['taxonomy_terms'] as $taxonomy => $term_ids ) {
+			$taxonomy = sanitize_key( $taxonomy );
+			if ( taxonomy_exists( $taxonomy ) ) {
+				wp_set_object_terms( $post_id, array_map( 'intval', (array) $term_ids ), $taxonomy );
+			}
+		}
+	}
+	return array( 'success' => true, 'id' => $post_id, 'url' => get_permalink( $post_id ) );
+}
+
+function wpmcpui_execute_delete_cpt_item( $input ) {
+	$post_id = isset( $input['id'] ) ? intval( $input['id'] ) : 0;
+	if ( ! $post_id || ! get_post( $post_id ) ) {
+		return array( 'success' => false, 'error' => "Post ID {$post_id} not found." );
+	}
+	$trashed = wp_trash_post( $post_id );
+	if ( ! $trashed ) {
+		return array( 'success' => false, 'error' => "Could not trash post ID {$post_id}." );
+	}
+	return array( 'success' => true, 'id' => $post_id, 'message' => "Post {$post_id} moved to trash." );
 }
