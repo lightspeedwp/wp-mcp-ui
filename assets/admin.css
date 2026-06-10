@@ -1,0 +1,228 @@
+/* LightSpeed MCP Admin Styles */
+
+.lsx-mcp-wrap {
+	max-width: 960px;
+	margin: 30px 20px;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Header */
+.lsx-mcp-header {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 20px;
+}
+.lsx-mcp-header h1 {
+	margin: 0;
+	font-size: 22px;
+	font-weight: 700;
+	color: #1d2327;
+}
+.lsx-mcp-badge {
+	background: #2271b1;
+	color: #fff;
+	font-size: 11px;
+	font-weight: 700;
+	padding: 3px 9px;
+	border-radius: 20px;
+}
+
+/* Tabs */
+.lsx-mcp-tabs {
+	display: flex;
+	gap: 0;
+	border-bottom: 2px solid #dcdcde;
+	margin-bottom: 0;
+	flex-wrap: wrap;
+}
+.lsx-mcp-tab {
+	background: none;
+	border: none;
+	padding: 10px 20px;
+	font-size: 13.5px;
+	font-weight: 600;
+	color: #787c82;
+	cursor: pointer;
+	border-bottom: 3px solid transparent;
+	margin-bottom: -2px;
+	transition: color .15s, border-color .15s;
+}
+.lsx-mcp-tab:hover { color: #1d2327; }
+.lsx-mcp-tab.active {
+	color: #2271b1;
+	border-bottom-color: #2271b1;
+}
+
+/* Panels */
+.lsx-mcp-panel { display: none; padding: 24px 0; }
+.lsx-mcp-panel.active { display: block; }
+.lsx-mcp-panel h2 {
+	margin: 0 0 16px;
+	font-size: 18px;
+	font-weight: 700;
+	color: #1d2327;
+}
+.lsx-mcp-panel h3 {
+	margin: 24px 0 10px;
+	font-size: 14px;
+	font-weight: 700;
+	color: #1d2327;
+}
+
+/* Status table */
+.lsx-mcp-status-table td:first-child { width: 220px; font-weight: 600; }
+.lsx-mcp-status-table code { background: #f0f0f1; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+
+/* Status badges */
+.lsx-mcp-badge-ok {
+	display: inline-block;
+	background: #e6f5ea;
+	color: #0a6234;
+	font-size: 11px;
+	font-weight: 700;
+	padding: 2px 8px;
+	border-radius: 12px;
+}
+.lsx-mcp-badge-off {
+	display: inline-block;
+	background: #fde8e8;
+	color: #8a2424;
+	font-size: 11px;
+	font-weight: 700;
+	padding: 2px 8px;
+	border-radius: 12px;
+}
+
+/* Code blocks */
+.lsx-mcp-code-wrap {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 6px;
+	overflow: hidden;
+	margin: 10px 0 20px;
+	box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+.lsx-mcp-code-header {
+	background: #f6f7f7;
+	padding: 8px 16px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-bottom: 1px solid #dcdcde;
+}
+.lsx-mcp-code-filename {
+	font-family: Consolas, Monaco, monospace;
+	font-size: 12.5px;
+	color: #3c434a;
+	font-weight: 600;
+}
+.lsx-mcp-code {
+	background: #1e1e1e;
+	color: #d4d4d4;
+	padding: 18px 20px;
+	margin: 0;
+	font-family: Consolas, Monaco, monospace;
+	font-size: 13px;
+	line-height: 1.6;
+	overflow-x: auto;
+	white-space: pre;
+	border: none;
+}
+
+/* Notes */
+.lsx-mcp-note {
+	background: #f0f6fc;
+	border-left: 3px solid #2271b1;
+	border-radius: 0 4px 4px 0;
+	padding: 12px 16px;
+	font-size: 13px;
+	color: #3c434a;
+	line-height: 1.65;
+	margin: 16px 0;
+}
+.lsx-mcp-note ul { margin: 8px 0 0 16px; }
+
+/* Lists */
+.lsx-mcp-list {
+	margin: 0 0 16px 20px;
+	font-size: 13.5px;
+	color: #3c434a;
+	line-height: 2;
+}
+.lsx-mcp-list code { background: #f0f0f1; padding: 1px 5px; border-radius: 3px; font-size: 12.5px; }
+
+/* Security checklist */
+.lsx-mcp-checklist {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.lsx-mcp-checklist li {
+	padding: 10px 12px 10px 36px;
+	font-size: 13.5px;
+	line-height: 1.6;
+	color: #3c434a;
+	border-bottom: 1px solid #f0f0f1;
+	position: relative;
+}
+.lsx-mcp-checklist li::before {
+	position: absolute;
+	left: 10px;
+	top: 12px;
+	font-size: 16px;
+}
+.lsx-mcp-checklist li.ok::before { content: "✓"; color: #00a32a; font-weight: 700; }
+.lsx-mcp-checklist li.warn::before { content: "⚠"; color: #dba617; }
+.lsx-mcp-checklist code { background: #f0f0f1; padding: 1px 5px; border-radius: 3px; font-size: 12.5px; }
+
+/* FAQ / Troubleshooting */
+.lsx-mcp-faq dt {
+	font-weight: 700;
+	font-size: 13.5px;
+	color: #1d2327;
+	margin: 20px 0 6px;
+}
+.lsx-mcp-faq dt:first-child { margin-top: 0; }
+.lsx-mcp-faq dd {
+	margin: 0 0 4px 0;
+	font-size: 13.5px;
+	color: #3c434a;
+	line-height: 1.65;
+}
+.lsx-mcp-faq code { background: #f0f0f1; padding: 1px 5px; border-radius: 3px; font-size: 12.5px; }
+
+/* Documentation tab */
+.lsx-mcp-doc-toc {
+	background: #f6f7f7;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	padding: 10px 14px;
+	margin: 0 0 20px;
+	font-size: 13px;
+	line-height: 1.8;
+}
+.lsx-mcp-doc-toc a {
+	text-decoration: none;
+	color: #2271b1;
+}
+.lsx-mcp-doc-toc a:hover { text-decoration: underline; }
+
+#lsx-mcp-tab-docs h3 {
+	margin-top: 32px;
+	padding-top: 24px;
+	border-top: 1px solid #dcdcde;
+	font-size: 16px;
+}
+#lsx-mcp-tab-docs h3:first-of-type { margin-top: 12px; border-top: none; }
+#lsx-mcp-tab-docs h4 { margin: 20px 0 8px; font-size: 14px; }
+#lsx-mcp-tab-docs .widefat { margin-bottom: 1em; }
+#lsx-mcp-tab-docs .widefat td,
+#lsx-mcp-tab-docs .widefat th { font-size: 13px; }
+
+/* Responsive */
+@media (max-width: 782px) {
+	.lsx-mcp-wrap { margin: 16px 10px; }
+	.lsx-mcp-status-table td:first-child { width: auto; }
+	.lsx-mcp-doc-toc { font-size: 12px; }
+}

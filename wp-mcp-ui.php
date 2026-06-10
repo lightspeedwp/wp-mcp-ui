@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: WP MCP UI
+ * Plugin Name: LSX MCP
  * Plugin URI:  https://lightspeedwp.agency
- * Description: Admin UI for managing WordPress content abilities exposed to AI via MCP. Enable/disable read and write access per content type from MCP UI → Abilities.
+ * Description: LightSpeed MCP setup helper and ability manager. Registers a read-only custom MCP testing server, Application Password compatibility for dev environments, and an admin dashboard at Tools → LightSpeed MCP.
  * Version:     1.0.0
  * Author:      Lightspeed WP
  * Author URI:  https://lightspeedwp.agency
@@ -16,6 +16,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'WPMCPUI_OPTION',  'wpmcpui_abilities' );
 define( 'WPMCPUI_VERSION', '1.0.0' );
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LIGHTSPEED MCP LAYER — modular includes
+// ─────────────────────────────────────────────────────────────────────────────
+
+require_once __DIR__ . '/includes/class-settings.php';
+require_once __DIR__ . '/includes/class-environment.php';
+require_once __DIR__ . '/includes/class-application-passwords.php';
+require_once __DIR__ . '/includes/class-mcp-config-generator.php';
+require_once __DIR__ . '/includes/class-admin-page.php';
+require_once __DIR__ . '/includes/class-custom-server.php';
+require_once __DIR__ . '/includes/abilities/class-site-summary-ability.php';
+require_once __DIR__ . '/includes/abilities/class-plugin-inventory-ability.php';
+require_once __DIR__ . '/includes/abilities/class-theme-audit-ability.php';
+require_once __DIR__ . '/includes/abilities/class-url-inventory-ability.php';
+require_once __DIR__ . '/includes/abilities/class-content-readiness-ability.php';
+require_once __DIR__ . '/includes/abilities/class-block-theme-audit-ability.php';
+require_once __DIR__ . '/includes/class-plugin.php';
+
+add_action( 'plugins_loaded', array( 'LSX_MCP_UI_Plugin', 'instance' ) );
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ABILITY REGISTRY
@@ -102,31 +122,12 @@ function wpmcpui_sanitize_settings( $input ) {
 
 add_action( 'admin_menu', 'wpmcpui_add_menu' );
 function wpmcpui_add_menu() {
-	add_menu_page(
-		'WP MCP UI',
-		'MCP UI',
+	add_management_page(
+		'MCP Abilities',
+		'MCP Abilities',
 		'manage_options',
 		'wp-mcp-ui',
-		'wpmcpui_settings_page',
-		'dashicons-superhero',
-		3
-	);
-
-	add_submenu_page(
-		'wp-mcp-ui',
-		'Abilities',
-		'Abilities',
-		'manage_options',
-		'wp-mcp-ui'
-	);
-
-	add_submenu_page(
-		'wp-mcp-ui',
-		'Connect',
-		'Connect',
-		'manage_options',
-		'wp-mcp-ui-connect',
-		'wpmcpui_connect_page'
+		'wpmcpui_settings_page'
 	);
 }
 
@@ -373,8 +374,8 @@ function wpmcpui_connect_page() {
 			<h1>WP MCP UI — Connect</h1>
 		</div>
 		<p class="wpmcpui-desc">
-			Use the config below to connect your AI tool to this WordPress site. Your API URL and username are pre-filled —
-			generate an <strong>Application Password</strong> and replace the placeholder before saving.
+			Use the config below to connect your AI tool to this WordPress site. The API URL and username are pre-filled from the current environment —
+			verify them before copying, then generate an <strong>Application Password</strong> and replace the placeholder.
 		</p>
 
 		<div class="wpmcpui-tabs">
